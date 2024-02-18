@@ -1,0 +1,16 @@
+.record__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  margin: auto;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease-in;
+  cursor: pointer;
+  width: 100%;
+  &:hover {
+    border: 1px solid var(--primary);
+  }
+}

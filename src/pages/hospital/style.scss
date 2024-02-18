@@ -1,0 +1,106 @@
+.hospital__wrapper {
+  padding-bottom: 30px;
+}
+.hospital__header {
+  background-image: url("https://cdn-pkh.longvan.net/prod-partner/9cef9b69-60d6-4456-8c41-888198b7a81a-dna-genetic-biotechnology-science-with-scientist-rsquo-s-hands-disruptive-technology-remix_1.png");
+  background-color: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.hospital__header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 48px;
+}
+.hospital__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: var(--max-width);
+}
+
+.search-recommend-result {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  z-index: 1;
+  width: 100%;
+  max-height: 240px;
+  background-color: var(--white);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0px 2px 12px 0px rgba(30, 32, 32, 0.12);
+
+  overflow-y: scroll;
+
+  .search-recommend-result__item {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.highlight-box {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  vertical-align: middle;
+}
+
+.highlight-words {
+  background-color: transparent;
+  font-weight: 700;
+}
+
+.hospital__card {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff;
+  margin: 0 auto;
+  border: 1px solid #fff;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--primary);
+  }
+}
+
+.text-title {
+  position: relative;
+  overflow: hidden;
+}
+.text-title::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: hsla(0, 0%, 100%, 0.55);
+  // border-left: 2px solid black;
+  animation: typing 6s steps(12) infinite;
+}
+
+@keyframes typing {
+  40%,
+  60% {
+    left: 100%;
+  }
+  100% {
+    left: 0;
+  }
+}

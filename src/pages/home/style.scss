@@ -1,0 +1,136 @@
+.intro__wrapper {
+  width: 100%;
+  margin-bottom: 16vh;
+}
+.intro__banner {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-image: url("https://cdn-pkh.longvan.net/prod-partner/877df3a6-926a-4146-8123-936a79e1eaa7-background_banner.webp");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease-in;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--primary);
+  }
+}
+
+.info__wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+.info__container {
+  margin-top: 10px;
+  background: #fff;
+  border-radius: 20px;
+}
+.info__top {
+  padding: 20px;
+}
+.info__bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.info__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  transition: box-shadow 0.3s ease-in;
+  border-radius: 16px;
+  height: 100%;
+  cursor: pointer;
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+}
+
+.statistic_container {
+  margin-top: 50px;
+  background: linear-gradient(84.1deg, #00b5f1 33.44%, #00e0ff 132.9%);
+  border-radius: 26px;
+}
+
+.hospital-section__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--white);
+  padding-top: 50px;
+  padding-bottom: 30px;
+  margin-top: 50px;
+}
+
+.hospital-section__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  text-align: start;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in;
+  cursor: pointer;
+  &:hover {
+    img {
+      scale: 1.1;
+    }
+  }
+}
+
+.booking__wrapper {
+  background: url("https://cdn-pkh.longvan.net/prod-partner/ad18563f-2e35-41b8-b7b8-8cb098347be1-bg_datkham.webp");
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.booking__rectangle {
+  background: linear-gradient(0deg, #fff, hsla(0, 0%, 100%, 0) 72.87%);
+  position: absolute;
+  width: 100%;
+  min-height: 235px;
+  bottom: 0;
+}
+.download__wrapper {
+  background: linear-gradient(
+    180deg,
+    #fff 52.32%,
+    hsla(0, 0%, 100%, 0) 100%,
+    #e8f2f7 0
+  );
+  padding-top: 20px;
+}
+
+#text-input::placeholder {
+  font-size: 20px;
+}

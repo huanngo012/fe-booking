@@ -1,26 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.scss";
+
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Fragment, Suspense } from "react";
+import { IsLogin, privateRoutes, publicRoutes } from "./routes/Routes";
+import Layout from "./components/layout";
+import Loading from "./components/loading";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          {publicRoutes.map((route, index) => {
+            const Page = route.component;
+            let LayoutTag;
+
+            if (route.layout) {
+              LayoutTag = Layout;
+            } else {
+              LayoutTag = Fragment;
+            }
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <LayoutTag>
+                    <Page />
+                  </LayoutTag>
+                }
+              />
+            );
+          })}
+          <Route element={<IsLogin />}>
+            {privateRoutes.map((route, index) => {
+              const Page = route.component;
+              let LayoutTag;
+
+              if (route.layout) {
+                LayoutTag = Layout;
+              } else {
+                LayoutTag = Fragment;
+              }
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    <LayoutTag>
+                      <Page />
+                    </LayoutTag>
+                  }
+                />
+              );
+            })}
+          </Route>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
-
 export default App;
