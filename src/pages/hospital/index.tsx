@@ -32,6 +32,7 @@ import useDebounce from "../../hooks/useDebounce";
 import EmptyPage from "../../components/emptyPage";
 import { apiGetProvinces } from "../../apis";
 import unidecode from "unidecode";
+import CustomSkeleton from "../../components/skeleton";
 
 const { LocationIcon } = images;
 
@@ -45,7 +46,7 @@ const HospitalPage = () => {
   const gapCard = isDesktop ? "40px" : "10px";
 
   const dispatch = useDispatch<AppDispatch>();
-  const { clinics } = useSelector((state: any) => state.clinic);
+  const { clinics, loading } = useSelector((state: any) => state.clinic);
 
   const pageSizeDefault = 10;
 
@@ -266,66 +267,67 @@ const HospitalPage = () => {
             </Stack>
           </Stack>
           <Stack flexDirection="row" flexWrap="wrap" rowGap="20px" width="100%">
-            {clinicsSearch.success ? (
-              clinicsSearch?.data?.map((el: any, index: any) => (
-                <Stack
-                  key={index}
-                  flex={widthCard}
-                  maxWidth={widthCard}
-                  padding="0 10px"
-                >
-                  <Box className="hospital__card" gap={gapCard}>
-                    <Box
-                      width="76px"
-                      height="76px"
-                      component="img"
-                      src={el.logo}
-                      alt={el.name}
-                    />
-                    <Stack
-                      flexDirection="column"
-                      gap="16px"
-                      justifyContent="center"
-                    >
-                      <Typography variant={isTablet ? "h6" : "label1"}>
-                        {el.name}
-                      </Typography>
-                      <Typography
-                        variant={isTablet ? "body2" : "body3"}
-                        display="flex"
-                        alignItems="center"
-                        gap="4px"
-                        color="var(--text-tertiary)"
+            {!loading ? (
+              clinicsSearch.success ? (
+                clinicsSearch?.data?.map((el: any, index: any) => (
+                  <Stack
+                    key={index}
+                    flex={widthCard}
+                    maxWidth={widthCard}
+                    padding="0 10px"
+                  >
+                    <Box className="hospital__card" gap={gapCard}>
+                      <Box
+                        width="76px"
+                        height="76px"
+                        component="img"
+                        src={el.logo}
+                        alt={el.name}
+                      />
+                      <Stack
+                        flexDirection="column"
+                        gap="16px"
+                        justifyContent="center"
                       >
-                        <LocationIcon
+                        <Typography variant={isTablet ? "h6" : "label1"}>
+                          {el.name}
+                        </Typography>
+                        <Typography
+                          variant={isTablet ? "body2" : "body3"}
+                          display="flex"
+                          alignItems="center"
+                          gap="4px"
                           color="var(--text-tertiary)"
-                          className="truncate_2"
-                        />
-                        {el?.address?.detail ? `${el?.address?.detail},` : ""}{" "}
-                        {el?.address?.ward ? `${el?.address?.ward},` : ""}{" "}
-                        {el?.address?.district
-                          ? `${el?.address?.district},`
-                          : ""}
-                        {el?.address?.province}
-                      </Typography>
-                      <Stack flexDirection="row" gap="16px">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          sx={{
-                            display: "flex",
-                            gap: "4px",
-                            borderRadius: "30px",
-                          }}
-                          onClick={() => navigate(`/hospitals/${el._id}`)}
                         >
-                          <Typography
-                            variant={isTablet ? "button2" : "button3"}
+                          <LocationIcon
+                            color="var(--text-tertiary)"
+                            className="truncate_2"
+                          />
+                          {el?.address?.detail ? `${el?.address?.detail},` : ""}{" "}
+                          {el?.address?.ward ? `${el?.address?.ward},` : ""}{" "}
+                          {el?.address?.district
+                            ? `${el?.address?.district},`
+                            : ""}
+                          {el?.address?.province}
+                        </Typography>
+                        <Stack flexDirection="row" gap="16px">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                              display: "flex",
+                              gap: "4px",
+                              borderRadius: "30px",
+                            }}
+                            onClick={() => navigate(`/hospitals/${el._id}`)}
                           >
-                            Xem chi tiết
-                          </Typography>
-                        </Button>
-                        {/* <Button
+                            <Typography
+                              variant={isTablet ? "button2" : "button3"}
+                            >
+                              Xem chi tiết
+                            </Typography>
+                          </Button>
+                          {/* <Button
                         variant="outlined"
                         color="primary"
                         sx={{
@@ -339,16 +341,25 @@ const HospitalPage = () => {
                           Xem chi tiết
                         </Typography>
                       </Button> */}
+                        </Stack>
                       </Stack>
-                    </Stack>
-                  </Box>
-                </Stack>
-              ))
+                    </Box>
+                  </Stack>
+                ))
+              ) : (
+                <EmptyPage title="Không tìm thấy bệnh viện" />
+              )
             ) : (
-              <EmptyPage title="Không tìm thấy bệnh viện" />
+              [...Array(10)].map((item, index: number) => (
+                <CustomSkeleton
+                  key={index}
+                  customKey={`skeleton__card-hospital-${index}`}
+                  variant="card-hospital"
+                />
+              ))
             )}
           </Stack>
-          {clinicsSearch.success && (
+          {!loading && clinicsSearch.success && (
             <Pagination
               count={totalPage}
               page={page}

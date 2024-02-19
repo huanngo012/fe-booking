@@ -1,10 +1,19 @@
-import { Alert, AlertTitle, Snackbar, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Snackbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import "./style.scss";
 import { useSelector } from "react-redux";
 import useNotification from "../../hooks/useNotification";
 import { images } from "../../assets";
+import { theme } from "../../themes/Theme";
 
 export default function Toast() {
+  const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+
   const { open, message, title, severity } = useSelector(
     (state: any) => state.common
   );
@@ -22,7 +31,7 @@ export default function Toast() {
       autoHideDuration={3000}
       onClose={handleCloseToast}
       anchorOrigin={anchorOrigin}
-      sx={{ width: "300px" }}
+      sx={{ width: isTablet ? "400px" : "300px" }}
     >
       <Alert
         className="toast-alert"

@@ -29,3 +29,20 @@ export interface CustomSelectProps {
   disabled?: boolean;
   color?: string;
 }
+
+export interface SkeletonProps {
+  customKey: string;
+}
+
+export interface CustomSkeletonProps {
+  customKey: string;
+  variant:
+    | "card-hospital-section"
+    | "card-hospital"
+    | "card-overview"
+    | "card-project"
+    | "card-device-health"
+    | "card-error"
+    | "card-notify"
+    | "card-notify-popup";
+}

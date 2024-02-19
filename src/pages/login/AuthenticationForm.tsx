@@ -45,10 +45,9 @@ const AuthenticationForm = () => {
 
     if (encryptedPassword) {
       const decryptedPassword = CryptoJS.AES.decrypt(
-        encryptedPassword,
+        JSON.stringify({ encryptedPassword }),
         "jlasdfmnqweo@#$_)dsf123456"
       ).toString(CryptoJS.enc.Utf8);
-
       const rememberMeFlag = localStorage.getItem("rememberMe");
       if (rememberMeFlag === "true") {
         const savedEmail = localStorage.getItem("email");

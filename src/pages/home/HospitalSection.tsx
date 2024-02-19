@@ -9,11 +9,12 @@ import { theme } from "../../themes/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { getClinics } from "../../redux/reducer/Clinic";
+import CustomSkeleton from "../../components/skeleton";
 
 const HospitalSection = React.forwardRef(
   ({ hospitalIsVisible }: HospitalSectionProps, ref) => {
     const dispatch = useDispatch<AppDispatch>();
-    const { clinics } = useSelector((state: any) => state.clinic);
+    const { clinics, loading } = useSelector((state: any) => state.clinic);
 
     const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
     const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -58,48 +59,58 @@ const HospitalSection = React.forwardRef(
             className={isTablet ? "custom-slider" : "custom-slider-1"}
             {...settings}
           >
-            {clinics?.data?.map((el: any, index: any) => (
-              <Box key={index} padding="10px">
-                <Box className="hospital-section__card">
-                  <Box
-                    width={heightImg}
-                    minHeight={heightImg}
-                    maxHeight={heightImg}
-                    borderRadius="16px"
-                    component="img"
-                    src={el.logo}
-                    alt={el.name}
-                    sx={{
-                      transition: "all 0.15s ease-in",
-                    }}
-                  />
-                  <Box
-                    component="span"
-                    sx={{ display: "flex", height: "16px" }}
-                  >
-                    {renderStartFromNumber(el?.totalRatings, 16)?.map(
-                      (el, index) => <Box key={index}>{el}</Box>
-                    )}
+            {!loading
+              ? clinics?.data?.map((el: any, index: any) => (
+                  <Box key={index} padding="10px">
+                    <Box className="hospital-section__card">
+                      <Box
+                        width={heightImg}
+                        minHeight={heightImg}
+                        maxHeight={heightImg}
+                        borderRadius="16px"
+                        component="img"
+                        src={el.logo}
+                        alt={el.name}
+                        sx={{
+                          transition: "all 0.15s ease-in",
+                        }}
+                      />
+                      <Box
+                        component="span"
+                        sx={{ display: "flex", height: "16px" }}
+                      >
+                        {renderStartFromNumber(el?.totalRatings, 16)?.map(
+                          (el, index) => <Box key={index}>{el}</Box>
+                        )}
+                      </Box>
+                      <Typography
+                        variant={isTablet ? "label2" : "label3"}
+                        className="truncate_2"
+                      >
+                        {el.name}
+                      </Typography>
+                      <Typography
+                        variant={isTablet ? "body2" : "body3"}
+                        color="var(--text-secondary)"
+                        className="truncate_2"
+                      >
+                        {el?.address?.detail ? `${el?.address?.detail},` : ""}{" "}
+                        {el?.address?.ward ? `${el?.address?.ward},` : ""}{" "}
+                        {el?.address?.district
+                          ? `${el?.address?.district},`
+                          : ""}
+                        {el?.address?.province}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Typography
-                    variant={isTablet ? "label2" : "label3"}
-                    className="truncate_2"
-                  >
-                    {el.name}
-                  </Typography>
-                  <Typography
-                    variant={isTablet ? "body2" : "body3"}
-                    color="var(--text-secondary)"
-                    className="truncate_2"
-                  >
-                    {el?.address?.detail ? `${el?.address?.detail},` : ""}{" "}
-                    {el?.address?.ward ? `${el?.address?.ward},` : ""}{" "}
-                    {el?.address?.district ? `${el?.address?.district},` : ""}
-                    {el?.address?.province}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
+                ))
+              : [...Array(10)].map((item, index: number) => (
+                  <CustomSkeleton
+                    key={index}
+                    customKey={`skeleton__card-hospital-section-${index}`}
+                    variant="card-hospital-section"
+                  />
+                ))}
           </Slider>
         </Box>
       </Box>

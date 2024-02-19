@@ -48,6 +48,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           current: current,
         })
       );
+      dispatch(getPatients({}));
     } else {
       dispatch(logout());
     }
@@ -63,10 +64,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
       clearTimeout(setTimeoutId);
     };
   }, [isLoggedIn]);
-
-  useEffect(() => {
-    dispatch(getPatients({}));
-  }, []);
 
   return (
     <Box

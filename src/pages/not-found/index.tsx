@@ -4,6 +4,7 @@ import { images } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { theme } from "../../themes/Theme";
 import { useTranslation } from "react-i18next";
+import { path } from "../../utils/constant";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
@@ -28,10 +29,10 @@ const NotFoundPage = () => {
       </Typography>
       <Button
         variant="contained"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate(path.HOME)}
         sx={{ width: "fit-content" }}
       >
-        <Typography variant="button2"> {t("not-found.return")}</Typography>
+        <Typography variant="button2"> {t("Trang chủ")}</Typography>
       </Button>
     </Box>
   );
