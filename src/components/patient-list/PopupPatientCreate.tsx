@@ -22,7 +22,11 @@ import { DatePicker } from "@mui/x-date-pickers";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
-import { addPatient, resetPatientStatus } from "../../redux/reducer/Patient";
+import {
+  addPatient,
+  getPatients,
+  resetPatientStatus,
+} from "../../redux/reducer/Patient";
 import useNotification from "../../hooks/useNotification";
 
 const PopupPatientCreate = () => {
@@ -54,6 +58,7 @@ const PopupPatientCreate = () => {
     if (successAction || errorAction) {
       if (successAction) {
         setPayload({});
+        dispatch(getPatients({}));
       }
       displayNotification({
         message: errorAction || successAction,

@@ -13,6 +13,8 @@ const CustomSkeleton = ({ customKey, variant }: CustomSkeletonProps) => {
       return <CardHospitalSkeleton customKey={customKey} />;
     case "card-hospital-section":
       return <CardHospitalSectionSkeleton customKey={customKey} />;
+    case "card-patient":
+      return <CardPatientSkeleton customKey={customKey} />;
     default:
       return <></>;
   }
@@ -50,6 +52,7 @@ const CardHospitalSkeleton = ({ customKey }: SkeletonProps) => {
     </Stack>
   );
 };
+
 const CardHospitalSectionSkeleton = ({ customKey }: SkeletonProps) => {
   const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -69,6 +72,40 @@ const CardHospitalSectionSkeleton = ({ customKey }: SkeletonProps) => {
         <Skeleton height={24} width="100%" />
         <Skeleton height={48} width="100%" />
       </Box>
+    </Box>
+  );
+};
+
+const CardPatientSkeleton = ({ customKey }: SkeletonProps) => {
+  const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+  const paddingCard = isTablet ? "28px 27px 26px" : "15px 13px";
+  return (
+    <Box
+      key={customKey}
+      padding="10px"
+      sx={{
+        display: "flex !important",
+      }}
+    >
+      <Box width="100%">
+        <Box
+          className="record__card"
+          sx={{
+            padding: paddingCard,
+            boxShadow:
+              "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+          }}
+        >
+          <Skeleton height={24} width="100%" />
+          <Skeleton height={24} width="100%" />
+          <Skeleton height={24} width="100%" />
+          <Skeleton height={24} width="100%" />
+          <Stack flexDirection="row" gap="16px" alignItems="center">
+            <Skeleton height={48} width="100%" />
+            <Skeleton height={48} width="100%" />
+          </Stack>
+        </Box>
+      </Box>{" "}
     </Box>
   );
 };

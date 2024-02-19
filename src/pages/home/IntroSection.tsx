@@ -1,6 +1,7 @@
 import {
   Box,
   ClickAwayListener,
+  Container,
   InputAdornment,
   MenuItem,
   Stack,
@@ -145,6 +146,7 @@ const IntroSection = React.forwardRef(
                     searchedResultList.length !== 0 && (
                       <Stack
                         className="search-recommend-result"
+                        maxHeight="350px"
                         direction="column"
                         gap={0.5}
                       >
@@ -218,7 +220,13 @@ const IntroSection = React.forwardRef(
                               </Stack>
                             ))
                           ) : (
-                            <EmptyPage title="Không tìm thấy bệnh viện" />
+                            <Container className="empty__container">
+                              <img
+                                src={images.emptyIcon}
+                                alt="Empty"
+                                width="20%"
+                              />
+                            </Container>
                           )}
                         </Stack>
                         <Stack direction="column" gap={0.5}>

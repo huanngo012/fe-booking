@@ -5,9 +5,11 @@ import ActionMenu from "../action-menu/ActionMenu";
 import PopupEditComment from "./PopupEditComment";
 import PopupDeleteComment from "./PopupDeleteComment";
 import { theme } from "../../themes/Theme";
+import { useSelector } from "react-redux";
 
 const CommentCard = ({ data }: { data?: any }) => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+  const { current } = useSelector((state: any) => state.auth);
   return (
     <Stack flexDirection="row" gap="16px">
       <Box width="35px">
@@ -70,16 +72,18 @@ const CommentCard = ({ data }: { data?: any }) => {
               </Typography>
             </Stack>
           </Stack>
-          <Box minWidth="30px">
-            <ActionMenu
-              actionList={
-                <>
-                  <PopupEditComment data={data} />
-                  <PopupDeleteComment id={data?.clinicID} />
-                </>
-              }
-            />
-          </Box>
+          {data?.postedBy === current?._id && (
+            <Box minWidth="30px">
+              <ActionMenu
+                actionList={
+                  <>
+                    <PopupEditComment data={data} />
+                    <PopupDeleteComment id={data?.clinicID} />
+                  </>
+                }
+              />
+            </Box>
+          )}
         </Stack>
       </Stack>
     </Stack>

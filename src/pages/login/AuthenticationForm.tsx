@@ -45,7 +45,7 @@ const AuthenticationForm = () => {
 
     if (encryptedPassword) {
       const decryptedPassword = CryptoJS.AES.decrypt(
-        JSON.stringify({ encryptedPassword }),
+        encryptedPassword,
         "jlasdfmnqweo@#$_)dsf123456"
       ).toString(CryptoJS.enc.Utf8);
       const rememberMeFlag = localStorage.getItem("rememberMe");
@@ -87,10 +87,8 @@ const AuthenticationForm = () => {
       setPasswordError("");
     }
   };
-  const handleRememberMeChange = (e: any) => {
-    setRememberMe(e.target.checked);
-
-    if (e.target.checked) {
+  const handleRememberMeChange = () => {
+    if (rememberMe) {
       localStorage.setItem("rememberMe", "true");
       localStorage.setItem("email", payload.email);
 
@@ -126,6 +124,7 @@ const AuthenticationForm = () => {
             current: rs.data,
           })
         );
+        handleRememberMeChange();
         navigate("/");
       } else {
         displayNotification({
@@ -231,7 +230,7 @@ const AuthenticationForm = () => {
                     <Checkbox
                       size="small"
                       checked={rememberMe}
-                      onChange={handleRememberMeChange}
+                      onChange={(e) => setRememberMe(e.target.checked)}
                     ></Checkbox>
                     <Typography variant="body2">Nhớ mật khẩu</Typography>
                   </Stack>

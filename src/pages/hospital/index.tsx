@@ -243,6 +243,7 @@ const HospitalPage = () => {
                       <Stack
                         className="search-recommend-result"
                         padding="12px"
+                        maxHeight="240px"
                         direction="column"
                         gap={0.5}
                       >

@@ -39,7 +39,7 @@ export interface CustomSkeletonProps {
   variant:
     | "card-hospital-section"
     | "card-hospital"
-    | "card-overview"
+    | "card-patient"
     | "card-project"
     | "card-device-health"
     | "card-error"

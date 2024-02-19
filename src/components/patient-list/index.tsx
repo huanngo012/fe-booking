@@ -6,6 +6,7 @@ import EmptyPage from "../emptyPage";
 import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "../../themes/Theme";
 import Slider, { Settings } from "react-slick";
+import CustomSkeleton from "../skeleton";
 
 const PatientList = ({
   payload,
@@ -15,7 +16,7 @@ const PatientList = ({
   setPayload?: any;
 }) => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
-  const { patients } = useSelector((state: any) => state.patient);
+  const { patients, loading } = useSelector((state: any) => state.patient);
 
   const [patientsSearch, setPatientsSearch] = useState<any>({});
   useEffect(() => {
@@ -33,36 +34,48 @@ const PatientList = ({
 
   return (
     <Slider className={"record-slider"} {...settings}>
-      {patientsSearch?.data?.length > 0 ? (
-        patientsSearch?.data?.map((el: any, index: any) => (
-          <Box
-            key={index}
-            padding="10px"
-            sx={{
-              display: "flex !important",
-            }}
-            onClick={() =>
-              setPayload &&
-              setPayload((prev: any) => ({
-                ...prev,
-                patientID: el?._id,
-                patient: el,
-              }))
-            }
-          >
+      {!loading ? (
+        patientsSearch?.data?.length > 0 ? (
+          patientsSearch?.data?.map((el: any, index: any) => (
             <Box
-              border={
-                payload?.patientID === el?._id ? "2px solid var(--primary)" : ""
+              key={index}
+              padding="10px"
+              sx={{
+                display: "flex !important",
+              }}
+              onClick={() =>
+                setPayload &&
+                setPayload((prev: any) => ({
+                  ...prev,
+                  patientID: el?._id,
+                  patient: el,
+                }))
               }
-              borderRadius={payload?.patientID === el?._id ? "16px" : ""}
-              width="100%"
             >
-              <PatientCard data={el} />
+              <Box
+                border={
+                  payload?.patientID === el?._id
+                    ? "2px solid var(--primary)"
+                    : ""
+                }
+                borderRadius={payload?.patientID === el?._id ? "16px" : ""}
+                width="100%"
+              >
+                <PatientCard data={el} />
+              </Box>
             </Box>
-          </Box>
-        ))
+          ))
+        ) : (
+          <EmptyPage title="Không có hồ sơ bệnh nhân" />
+        )
       ) : (
-        <EmptyPage title="Không có hồ sơ bệnh nhân" />
+        [...Array(10)].map((item, index: number) => (
+          <CustomSkeleton
+            key={index}
+            customKey={`skeleton__card-patient-${index}`}
+            variant="card-patient"
+          />
+        ))
       )}
     </Slider>
   );
