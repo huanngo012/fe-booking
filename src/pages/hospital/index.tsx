@@ -46,7 +46,7 @@ const HospitalPage = () => {
   const gapCard = isDesktop ? "40px" : "10px";
 
   const dispatch = useDispatch<AppDispatch>();
-  const { clinics, loading } = useSelector((state: any) => state.clinic);
+  const { clinics, loadingClinic } = useSelector((state: any) => state.clinic);
 
   const pageSizeDefault = 10;
 
@@ -268,7 +268,7 @@ const HospitalPage = () => {
             </Stack>
           </Stack>
           <Stack flexDirection="row" flexWrap="wrap" rowGap="20px" width="100%">
-            {!loading ? (
+            {!loadingClinic ? (
               clinicsSearch.success ? (
                 clinicsSearch?.data?.map((el: any, index: any) => (
                   <Stack
@@ -360,7 +360,7 @@ const HospitalPage = () => {
               ))
             )}
           </Stack>
-          {!loading && clinicsSearch.success && (
+          {!loadingClinic && clinicsSearch.success && (
             <Pagination
               count={totalPage}
               page={page}

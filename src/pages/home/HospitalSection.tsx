@@ -8,13 +8,15 @@ import { renderStartFromNumber } from "../../utils/helper";
 import { theme } from "../../themes/Theme";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
-import { getClinics } from "../../redux/reducer/Clinic";
+import { getClinicsTop } from "../../redux/reducer/Clinic";
 import CustomSkeleton from "../../components/skeleton";
 
 const HospitalSection = React.forwardRef(
   ({ hospitalIsVisible }: HospitalSectionProps, ref) => {
     const dispatch = useDispatch<AppDispatch>();
-    const { clinics, loading } = useSelector((state: any) => state.clinic);
+    const { clinicsTop, loadingClinic } = useSelector(
+      (state: any) => state.clinic
+    );
 
     const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
     const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
@@ -29,7 +31,7 @@ const HospitalSection = React.forwardRef(
     };
 
     const getApiClinics = async () => {
-      dispatch(getClinics({ limit: 10, page: 1 }));
+      dispatch(getClinicsTop({ limit: 10, page: 1 }));
     };
     useEffect(() => {
       getApiClinics();
@@ -51,7 +53,7 @@ const HospitalSection = React.forwardRef(
             Bệnh viện tiêu biểu
           </Typography>
           <Typography variant="label1" color="#858585">
-            {`Đặt lịch khám với hơn ${clinics?.counts} bệnh viện trên khắp cả nước`}
+            {`Đặt lịch khám với hơn ${clinicsTop?.counts} bệnh viện trên khắp cả nước`}
           </Typography>
         </Box>
         <Box width="100%">
@@ -59,8 +61,8 @@ const HospitalSection = React.forwardRef(
             className={isTablet ? "custom-slider" : "custom-slider-1"}
             {...settings}
           >
-            {!loading
-              ? clinics?.data?.map((el: any, index: any) => (
+            {!loadingClinic
+              ? clinicsTop?.data?.map((el: any, index: any) => (
                   <Box key={index} padding="10px">
                     <Box className="hospital-section__card">
                       <Box

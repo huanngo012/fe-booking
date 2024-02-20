@@ -15,6 +15,8 @@ const CustomSkeleton = ({ customKey, variant }: CustomSkeletonProps) => {
       return <CardHospitalSectionSkeleton customKey={customKey} />;
     case "card-patient":
       return <CardPatientSkeleton customKey={customKey} />;
+    case "card-search":
+      return <CardSearchSkeleton customKey={customKey} />;
     default:
       return <></>;
   }
@@ -106,6 +108,22 @@ const CardPatientSkeleton = ({ customKey }: SkeletonProps) => {
           </Stack>
         </Box>
       </Box>{" "}
+    </Box>
+  );
+};
+const CardSearchSkeleton = ({ customKey }: SkeletonProps) => {
+  return (
+    <Box key={customKey} className="search__card" gap="10px">
+      <Skeleton height="40px" width="40px" />
+      <Stack
+        flexDirection="column"
+        gap="4px"
+        alignItems="flex-start"
+        width="100%"
+      >
+        <Skeleton height={18} width="100%" />
+        <Skeleton height={18} width="100%" />
+      </Stack>
     </Box>
   );
 };

@@ -29,38 +29,38 @@ export interface UserState {
   users: any;
 }
 export interface PatientState {
-  loading: boolean;
+  loadingPatient: boolean;
   successAction: any | null;
   errorAction: any | null;
   patients: any;
 }
 export interface DoctorState {
-  loading: boolean;
+  loadingDoctor: boolean;
   successAction: any | null;
   errorAction: any | null;
   doctors: any;
 }
 export interface ClinicState {
-  loading: boolean;
+  loadingClinic: boolean;
   successAction: any | null;
   errorAction: any | null;
   clinics: any;
-  // clinicsTop: any;
+  clinicsTop: any;
 }
 export interface SpecialtyState {
-  loading: boolean;
+  loadingSpecialty: boolean;
   successAction: any | null;
   errorAction: any | null;
   specialtys: any;
 }
 export interface ScheduleState {
-  loading: boolean;
+  loadingSchedule: boolean;
   successAction: any | null;
   errorAction: any | null;
   schedules: any;
 }
 export interface BookingState {
-  loading: boolean;
+  loadingBooking: boolean;
   successAction: any | null;
   errorAction: any | null;
   bookings: any;

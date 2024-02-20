@@ -1,6 +1,7 @@
 import axios from "axios";
 const instance = axios.create({
   baseURL: "https://backend-nhom5.vercel.app/api",
+  // baseURL: "http://localhost:5000/api",
   withCredentials: true,
 });
 // Thêm một bộ đón chặn request

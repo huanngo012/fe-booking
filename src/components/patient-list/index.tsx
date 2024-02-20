@@ -16,7 +16,9 @@ const PatientList = ({
   setPayload?: any;
 }) => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
-  const { patients, loading } = useSelector((state: any) => state.patient);
+  const { patients, loadingPatient } = useSelector(
+    (state: any) => state.patient
+  );
 
   const [patientsSearch, setPatientsSearch] = useState<any>({});
   useEffect(() => {
@@ -34,7 +36,7 @@ const PatientList = ({
 
   return (
     <Slider className={"record-slider"} {...settings}>
-      {!loading ? (
+      {!loadingPatient ? (
         patientsSearch?.data?.length > 0 ? (
           patientsSearch?.data?.map((el: any, index: any) => (
             <Box

@@ -3,7 +3,7 @@ import * as apis from "../../apis";
 import { DoctorState } from "../module";
 
 const initialState: DoctorState = {
-  loading: false,
+  loadingDoctor: false,
   successAction: null,
   errorAction: null,
   doctors: [],
@@ -31,15 +31,15 @@ export const doctorSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getDoctors.pending, (state) => {
-      state.loading = true;
+      state.loadingDoctor = true;
     });
     builder.addCase(getDoctors.fulfilled, (state, action) => {
       state.doctors = action.payload;
-      state.loading = false;
+      state.loadingDoctor = false;
     });
     builder.addCase(getDoctors.rejected, (state, action) => {
       state.errorAction = action.payload;
-      state.loading = false;
+      state.loadingDoctor = false;
     });
   },
 });

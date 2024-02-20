@@ -18,12 +18,28 @@ import React, { useEffect, useState } from "react";
 import { IntroSectionProps } from "./module";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
-import EmptyPage from "../../components/emptyPage";
+import useDebounce from "../../hooks/useDebounce";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { getClinics } from "../../redux/reducer/Clinic";
+import { getDoctors } from "../../redux/reducer/Doctor";
+import { useNavigate } from "react-router-dom";
+import { path } from "../../utils/constant";
+import CustomSkeleton from "../../components/skeleton";
 
 const { LocationIcon } = images;
 
 const IntroSection = React.forwardRef(
   ({ introIsVisible }: IntroSectionProps, ref) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const { clinics, loadingClinic } = useSelector(
+      (state: any) => state.clinic
+    );
+    const { doctors, loadingDoctor } = useSelector(
+      (state: any) => state.doctor
+    );
+
     const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
     const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
     const titleSize = isDesktop ? "h3" : "h5";
@@ -63,18 +79,42 @@ const IntroSection = React.forwardRef(
       typing();
     }, [indexList]);
 
-    const [keyword, setKeyword] = useState("");
-    const [searchedResultList, setSearchedResultList] = useState([
-      {
-        id: 1,
-        province_name: "aa",
-      },
-    ]);
+    const [searchLabel, setSearchLabel] = useState("");
     const [clinicsSearch, setClinicsSearch] = useState<any>({});
+    const [doctorsSearch, setDoctorsSearch] = useState<any>({});
     const [openSearchRecommendation, setOpenSearchRecommendation] =
       useState(false);
     const handleOpenActionMenu = () => setOpenSearchRecommendation(true);
     const handleCloseActionMenu = () => setOpenSearchRecommendation(false);
+
+    const debounceSearchLabel = useDebounce(searchLabel, 700);
+
+    useEffect(() => {
+      if (debounceSearchLabel !== "") {
+        dispatch(
+          getClinics({
+            limit: 3,
+            page: 1,
+            name: searchLabel,
+          })
+        );
+        dispatch(
+          getDoctors({
+            limit: 3,
+            page: 1,
+            fullName: searchLabel,
+          })
+        );
+      }
+    }, [debounceSearchLabel]);
+
+    useEffect(() => {
+      setClinicsSearch(clinics);
+    }, [clinics]);
+
+    useEffect(() => {
+      setDoctorsSearch(doctors);
+    }, [doctors]);
 
     return (
       <Box className="intro__wrapper " height="50vh" ref={ref}>
@@ -105,9 +145,9 @@ const IntroSection = React.forwardRef(
                 <Box width="100%">
                   <TextField
                     id="text-input"
-                    value={keyword}
+                    value={searchLabel}
                     onChange={(e) => {
-                      setKeyword(e.target.value);
+                      setSearchLabel(e.target.value);
                     }}
                     onClick={() => handleOpenActionMenu()}
                     autoComplete="off"
@@ -130,94 +170,87 @@ const IntroSection = React.forwardRef(
                           />
                         </InputAdornment>
                       ),
-                      endAdornment: keyword !== "" && (
+                      endAdornment: searchLabel !== "" && (
                         <IoMdClose
                           size={24}
                           color="var(--text-tertiary)"
                           cursor="pointer"
                           onClick={() => {
-                            setKeyword("");
+                            setSearchLabel("");
                           }}
                         />
                       ),
                     }}
                   />
-                  {openSearchRecommendation &&
-                    searchedResultList.length !== 0 && (
-                      <Stack
-                        className="search-recommend-result"
-                        maxHeight="350px"
-                        direction="column"
-                        gap={0.5}
-                      >
-                        <Stack direction="column" gap={0.5}>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            padding="10px"
-                            sx={{ backgroundColor: "var(--blue-60)" }}
+                  {searchLabel !== "" && openSearchRecommendation && (
+                    <Stack
+                      className="search-recommend-result"
+                      maxHeight="350px"
+                      direction="column"
+                      gap={0.5}
+                    >
+                      <Stack direction="column" gap={0.5}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          padding="10px"
+                          sx={{ backgroundColor: "var(--blue-60)" }}
+                        >
+                          <Typography variant="label4" color="var(--secondary)">
+                            Cơ sở y tế
+                          </Typography>
+                          <Typography
+                            variant="label4"
+                            component="i"
+                            color="var(--primary)"
                           >
-                            <Typography
-                              variant="label2"
-                              color="var(--secondary)"
-                            >
-                              Cơ sở y tế
-                            </Typography>
-                            <Typography
-                              variant="label3"
-                              component="i"
-                              color="var(--primary)"
-                            >
-                              Xem tất cả
-                            </Typography>
-                          </Stack>
-                          {clinicsSearch.success ? (
+                            Xem tất cả
+                          </Typography>
+                        </Stack>
+                        {!loadingClinic ? (
+                          clinicsSearch.success ? (
                             clinicsSearch?.data?.map((el: any, index: any) => (
-                              <Stack key={index} padding="0 10px">
-                                <Box className="hospital__card" gap="10px">
-                                  <Box
-                                    width="76px"
-                                    height="76px"
-                                    component="img"
-                                    src={el.logo}
-                                    alt={el.name}
-                                  />
-                                  <Stack
-                                    flexDirection="column"
-                                    gap="16px"
-                                    justifyContent="center"
+                              <Box
+                                key={index}
+                                className="search__card"
+                                gap="10px"
+                                onClick={() =>
+                                  navigate(`${path.HOSPITALS}/${el._id}`)
+                                }
+                              >
+                                <Box
+                                  width="40px"
+                                  height="40px"
+                                  component="img"
+                                  src={el.logo}
+                                  alt=""
+                                />
+                                <Stack
+                                  flexDirection="column"
+                                  gap="4px"
+                                  alignItems="flex-start"
+                                >
+                                  <Typography variant="label4">
+                                    {el.name}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption1"
+                                    color="var(--text-tertiary)"
                                   >
-                                    <Typography
-                                      variant={isTablet ? "h6" : "label1"}
-                                    >
-                                      {el.name}
-                                    </Typography>
-                                    <Typography
-                                      variant={isTablet ? "body2" : "body3"}
-                                      display="flex"
-                                      alignItems="center"
-                                      gap="4px"
-                                      color="var(--text-tertiary)"
-                                    >
-                                      <LocationIcon
-                                        color="var(--text-tertiary)"
-                                        className="truncate_2"
-                                      />
-                                      {el?.address?.detail
-                                        ? `${el?.address?.detail},`
-                                        : ""}{" "}
-                                      {el?.address?.ward
-                                        ? `${el?.address?.ward},`
-                                        : ""}{" "}
-                                      {el?.address?.district
-                                        ? `${el?.address?.district},`
-                                        : ""}
-                                      {el?.address?.province}
-                                    </Typography>
-                                  </Stack>
-                                </Box>
-                              </Stack>
+                                    {el?.address?.detail
+                                      ? `${el?.address?.detail},`
+                                      : ""}{" "}
+                                    {el?.address?.ward
+                                      ? `${el?.address?.ward},`
+                                      : ""}{" "}
+                                    {el?.address?.district
+                                      ? `${el?.address?.district},`
+                                      : ""}
+                                    {el?.address?.province}
+                                  </Typography>
+                                </Stack>
+                              </Box>
                             ))
                           ) : (
                             <Container className="empty__container">
@@ -227,70 +260,118 @@ const IntroSection = React.forwardRef(
                                 width="20%"
                               />
                             </Container>
-                          )}
-                        </Stack>
-                        <Stack direction="column" gap={0.5}>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            padding="10px"
-                            sx={{ backgroundColor: "var(--blue-60)" }}
+                          )
+                        ) : (
+                          [...Array(3)].map((item, index: number) => (
+                            <CustomSkeleton
+                              key={index}
+                              customKey={`skeleton__card-search-${index}`}
+                              variant="card-search"
+                            />
+                          ))
+                        )}
+                      </Stack>
+                      <Stack direction="column" gap={0.5}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          padding="10px"
+                          sx={{ backgroundColor: "var(--blue-60)" }}
+                        >
+                          <Typography variant="label4" color="var(--secondary)">
+                            Bác sĩ
+                          </Typography>
+                          <Typography
+                            variant="label4"
+                            component="i"
+                            color="var(--primary)"
                           >
-                            <Typography
-                              variant="label2"
-                              color="var(--secondary)"
-                            >
-                              Bác sĩ
-                            </Typography>
-                            <Typography
-                              variant="label3"
-                              component="i"
-                              color="var(--primary)"
-                            >
-                              Xem tất cả
-                            </Typography>
-                          </Stack>
-                          {searchedResultList.map((item: any) => (
-                            <MenuItem className="search-recommend-result__item">
-                              <Typography variant="body2">
-                                {item.province_name}
-                              </Typography>
-                            </MenuItem>
-                          ))}
+                            Xem tất cả
+                          </Typography>
                         </Stack>
-                        <Stack direction="column" gap={0.5}>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            padding="10px"
-                            sx={{ backgroundColor: "var(--blue-60)" }}
+                        {!loadingDoctor ? (
+                          doctorsSearch.success ? (
+                            doctorsSearch?.data?.map((el: any, index: any) => (
+                              <Box
+                                key={index}
+                                className="search__card"
+                                gap="10px"
+                                onClick={() =>
+                                  navigate(`${path.DOCTORS}/${el._id}`)
+                                }
+                              >
+                                <Box
+                                  width="40px"
+                                  height="40px"
+                                  component="img"
+                                  src={el?._id?.avatar}
+                                  alt=""
+                                />
+                                <Stack
+                                  flexDirection="column"
+                                  gap="4px"
+                                  alignItems="flex-start"
+                                >
+                                  <Typography variant="label4">
+                                    {el?.position} {el?._id?.fullName}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption1"
+                                    color="var(--text-tertiary)"
+                                  >
+                                    {el?.clinicID?.name}
+                                  </Typography>
+                                  <Typography
+                                    variant="caption1"
+                                    color="var(--text-tertiary)"
+                                  >
+                                    {el?.specialtyID?.name}
+                                  </Typography>
+                                </Stack>
+                              </Box>
+                            ))
+                          ) : (
+                            <Container className="empty__container">
+                              <img
+                                src={images.emptyIcon}
+                                alt="Empty"
+                                width="20%"
+                              />
+                            </Container>
+                          )
+                        ) : (
+                          [...Array(3)].map((item, index: number) => (
+                            <CustomSkeleton
+                              key={index}
+                              customKey={`skeleton__card-search-${index}`}
+                              variant="card-search"
+                            />
+                          ))
+                        )}
+                      </Stack>
+                      <Stack direction="column" gap={0.5}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          padding="10px"
+                          sx={{ backgroundColor: "var(--blue-60)" }}
+                        >
+                          <Typography variant="label2" color="var(--secondary)">
+                            Chuyên khoa
+                          </Typography>
+                          <Typography
+                            variant="label3"
+                            component="i"
+                            color="var(--primary)"
                           >
-                            <Typography
-                              variant="label2"
-                              color="var(--secondary)"
-                            >
-                              Chuyên khoa
-                            </Typography>
-                            <Typography
-                              variant="label3"
-                              component="i"
-                              color="var(--primary)"
-                            >
-                              Xem tất cả
-                            </Typography>
-                          </Stack>
-                          {searchedResultList.map((item: any) => (
-                            <MenuItem className="search-recommend-result__item">
-                              <Typography variant="body2">
-                                {item.province_name}
-                              </Typography>
-                            </MenuItem>
-                          ))}
+                            Xem tất cả
+                          </Typography>
                         </Stack>
                       </Stack>
-                    )}
+                    </Stack>
+                  )}
                 </Box>
               </ClickAwayListener>
             </Stack>

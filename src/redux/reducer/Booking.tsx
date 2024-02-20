@@ -3,7 +3,7 @@ import * as apis from "../../apis";
 import { BookingState } from "../module";
 
 const initialState: BookingState = {
-  loading: false,
+  loadingBooking: false,
   successAction: null,
   errorAction: null,
   bookings: [],
@@ -41,29 +41,29 @@ export const bookingSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getBookings.pending, (state) => {
-      state.loading = true;
+      state.loadingBooking = true;
     });
     builder.addCase(getBookings.fulfilled, (state, action) => {
       state.bookings = action.payload;
-      state.loading = false;
+      state.loadingBooking = false;
     });
     builder.addCase(getBookings.rejected, (state, action) => {
       state.bookings = action.payload;
-      state.loading = false;
+      state.loadingBooking = false;
     });
 
     //ADD BOOKING
     builder.addCase(addBooking.pending, (state) => {
-      state.loading = true;
+      state.loadingBooking = true;
       state.successAction = null;
       state.errorAction = null;
     });
     builder.addCase(addBooking.fulfilled, (state, action) => {
-      state.loading = false;
+      state.loadingBooking = false;
       state.successAction = action.payload;
     });
     builder.addCase(addBooking.rejected, (state, action) => {
-      state.loading = false;
+      state.loadingBooking = false;
       state.errorAction = action.payload;
     });
   },

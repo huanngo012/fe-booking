@@ -37,6 +37,7 @@ export interface SkeletonProps {
 export interface CustomSkeletonProps {
   customKey: string;
   variant:
+    | "card-search"
     | "card-hospital-section"
     | "card-hospital"
     | "card-patient"

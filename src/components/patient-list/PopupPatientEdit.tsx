@@ -29,7 +29,7 @@ const PopupPatientEdit = ({ data }: { data?: any }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const { displayNotification } = useNotification();
-  const { loading, successAction, errorAction } = useSelector(
+  const { loadingPatient, successAction, errorAction } = useSelector(
     (state: any) => state.patient
   );
 
@@ -245,7 +245,7 @@ const PopupPatientEdit = ({ data }: { data?: any }) => {
                 sx={{ width: "100%" }}
               >
                 <Typography variant="button2">
-                  {loading ? (
+                  {loadingPatient ? (
                     <CircularProgress
                       size={28}
                       sx={{ color: "var(--white)" }}

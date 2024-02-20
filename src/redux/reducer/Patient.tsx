@@ -3,7 +3,7 @@ import * as apis from "../../apis";
 import { PatientState } from "../module";
 
 const initialState: PatientState = {
-  loading: false,
+  loadingPatient: false,
   successAction: null,
   errorAction: null,
   patients: [],
@@ -62,57 +62,57 @@ export const patientSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getPatients.pending, (state) => {
-      state.loading = true;
+      state.loadingPatient = true;
     });
     builder.addCase(getPatients.fulfilled, (state, action) => {
       state.patients = action.payload;
-      state.loading = false;
+      state.loadingPatient = false;
     });
     builder.addCase(getPatients.rejected, (state, action) => {
       state.patients = action.payload;
-      state.loading = false;
+      state.loadingPatient = false;
     });
 
     //ADD PATIENT
     builder.addCase(addPatient.pending, (state) => {
-      state.loading = true;
+      state.loadingPatient = true;
       state.successAction = null;
       state.errorAction = null;
     });
     builder.addCase(addPatient.fulfilled, (state, action) => {
-      state.loading = false;
+      state.loadingPatient = false;
       state.successAction = action.payload;
     });
     builder.addCase(addPatient.rejected, (state, action) => {
-      state.loading = false;
+      state.loadingPatient = false;
       state.errorAction = action.payload;
     });
     //UPDATE PATIENT
     builder.addCase(updatePatient.pending, (state) => {
-      state.loading = true;
+      state.loadingPatient = true;
       state.successAction = null;
       state.errorAction = null;
     });
     builder.addCase(updatePatient.fulfilled, (state, action) => {
-      state.loading = false;
+      state.loadingPatient = false;
       state.successAction = action.payload;
     });
     builder.addCase(updatePatient.rejected, (state, action) => {
-      state.loading = false;
+      state.loadingPatient = false;
       state.errorAction = action.payload;
     });
     //DELETE PATIENT
     builder.addCase(deletePatient.pending, (state) => {
-      state.loading = true;
+      state.loadingPatient = true;
       state.successAction = null;
       state.errorAction = null;
     });
     builder.addCase(deletePatient.fulfilled, (state, action) => {
-      state.loading = false;
+      state.loadingPatient = false;
       state.successAction = action.payload;
     });
     builder.addCase(deletePatient.rejected, (state, action) => {
-      state.loading = false;
+      state.loadingPatient = false;
       state.errorAction = action.payload;
     });
   },
