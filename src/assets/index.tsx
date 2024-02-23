@@ -13,6 +13,7 @@ import { ReactComponent as UserRecord } from "./svg/user-record.svg";
 import { ReactComponent as UserAvatar } from "./svg/user-avatar.svg";
 import { ReactComponent as CancelIcon } from "./svg/cancel-icon.svg";
 import { ReactComponent as ErrorRoundedIcon } from "./svg/error-rounded-icon.svg";
+import { ReactComponent as WarningIcon } from "./svg/warning.svg";
 
 //img
 import booking from "./img/booking.webp";
@@ -51,6 +52,7 @@ export const images = {
   UserAvatar,
   CancelIcon,
   ErrorRoundedIcon,
+  WarningIcon,
 
   //img
   booking,

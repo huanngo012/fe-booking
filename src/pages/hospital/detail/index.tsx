@@ -69,19 +69,19 @@ const HospitalDetailPage = () => {
 
   const addressClinic = `${clinic?.address?.detail ? `${clinic?.address?.detail}, ` : ""} ${clinic?.address?.ward ? `${clinic?.address?.ward}, ` : ""} ${clinic?.address?.district ? `${clinic?.address?.district}, ` : ""}${clinic?.address?.province} `;
 
-  useEffect(() => {
-    if (successAction || errorAction) {
-      if (successAction) {
-        setPayload({});
-      }
-      displayNotification({
-        message: errorAction || successAction,
-        severity: successAction ? "success" : "error",
-        title: successAction ? "Thành công" : "Thất bại",
-      });
-      dispatch(resetClinicStatus());
-    }
-  }, [successAction, errorAction]);
+  // useEffect(() => {
+  //   if (successAction || errorAction) {
+  //     if (successAction) {
+  //       setPayload({});
+  //     }
+  //     displayNotification({
+  //       message: errorAction || successAction,
+  //       severity: successAction ? "success" : "error",
+  //       title: successAction ? "Thành công" : "Thất bại",
+  //     });
+  //     dispatch(resetClinicStatus());
+  //   }
+  // }, [successAction, errorAction]);
 
   return (
     <>
@@ -141,7 +141,12 @@ const HospitalDetailPage = () => {
               </Breadcrumbs>
             </Box>
             <Stack flexDirection="row" flexWrap="wrap" rowGap="24px">
-              <Stack flex={widthLeft} maxWidth={widthLeft} padding="0 10px">
+              <Stack
+                flex={widthLeft}
+                maxWidth={widthLeft}
+                padding="0 10px"
+                maxHeight="500px"
+              >
                 <Stack
                   flexDirection="column"
                   alignItems="center"
@@ -210,20 +215,26 @@ const HospitalDetailPage = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Stack flex={widthRight} maxWidth={widthRight} padding="0 10px">
+              <Stack
+                flex={widthRight}
+                maxWidth={widthRight}
+                padding="0 10px"
+                maxHeight="500px"
+              >
                 <Slider className="custom-slider-1" {...settings}>
-                  {clinic?.images?.map((el: any, index: any) => (
-                    <Box key={index}>
-                      <Box
-                        component="img"
-                        src={el}
-                        alt=""
-                        width="100%"
-                        height="101%"
-                        borderRadius="16px"
-                      />
-                    </Box>
-                  ))}
+                  {clinic?.images &&
+                    clinic?.images?.map((el: any, index: any) => (
+                      <Box key={index}>
+                        <Box
+                          component="img"
+                          src={el}
+                          alt=""
+                          width="100%"
+                          height="101%"
+                          borderRadius="16px"
+                        />
+                      </Box>
+                    ))}
                 </Slider>
               </Stack>
               <Stack

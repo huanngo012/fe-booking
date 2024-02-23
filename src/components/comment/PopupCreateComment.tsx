@@ -9,14 +9,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { voteOptions } from "../../utils/constant";
+import { path, voteOptions } from "../../utils/constant";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { styled } from "@mui/system";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { ratingClinic } from "../../redux/reducer/Clinic";
+import { useNavigate } from "react-router-dom";
 
 const PopupCreateComment = ({
   payload,
@@ -25,11 +26,17 @@ const PopupCreateComment = ({
   payload?: any;
   setPayload?: any;
 }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { isLoggedIn } = useSelector((state: any) => state.auth);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    if (isLoggedIn) {
+      setOpen(true);
+    } else {
+      navigate(path.LOGIN);
+    }
   };
   const handleClose = () => {
     setOpen(false);

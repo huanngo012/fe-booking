@@ -87,7 +87,10 @@ const IntroSection = React.forwardRef(
     const handleOpenActionMenu = () => setOpenSearchRecommendation(true);
     const handleCloseActionMenu = () => setOpenSearchRecommendation(false);
 
-    const debounceSearchLabel = useDebounce(searchLabel, 700);
+    const debounceSearchLabel = useDebounce(
+      searchLabel,
+      searchLabel === "" ? 0 : 700
+    );
 
     useEffect(() => {
       if (debounceSearchLabel !== "") {

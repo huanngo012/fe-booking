@@ -15,6 +15,8 @@ import { AppDispatch } from "../../redux/store";
 import useNotification from "../../hooks/useNotification";
 import { resetAuthStatus } from "../../redux/reducer/Auth";
 import RegisterForm from "./RegisterForm";
+import SuccessForm from "./SuccessForm";
+import FailedForm from "./FailedForm";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -45,9 +47,12 @@ const LoginPage = () => {
         return <ForgotPasswordForm setPayload={setPayload} />;
       case "verification":
         return <VerificationForm payload={payload} setPayload={setPayload} />;
-
       case "resetPassword":
         return <ResetPasswordForm payload={payload} setPayload={setPayload} />;
+      case "success":
+        return <SuccessForm />;
+      case "failed":
+        return <FailedForm />;
       default:
         return <AuthenticationForm />;
     }
