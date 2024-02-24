@@ -37,8 +37,8 @@ const PatientList = ({
   return (
     <Slider className={"record-slider"} {...settings}>
       {!loadingPatient ? (
-        patientsSearch?.data?.length > 0 ? (
-          patientsSearch?.data?.map((el: any, index: any) => (
+        patientsSearch?.length > 0 ? (
+          patientsSearch?.map((el: any, index: any) => (
             <Box
               key={index}
               padding="10px"

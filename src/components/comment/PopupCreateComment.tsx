@@ -88,6 +88,7 @@ const PopupCreateComment = ({
             <Box className="popup__body">
               <Stack direction="column" gap="16px" width="100%">
                 <Textarea
+                  value={payload?.comment}
                   aria-label="empty textarea"
                   placeholder="Bình luận"
                   minRows="5"

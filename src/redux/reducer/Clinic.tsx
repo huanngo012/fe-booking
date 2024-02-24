@@ -8,6 +8,8 @@ const initialState: ClinicState = {
   errorAction: null,
   clinics: [],
   clinicsTop: [],
+  counts: 0,
+  totalClinic: 0,
 };
 
 export const getClinics = createAsyncThunk(
@@ -66,12 +68,13 @@ export const clinicSlice = createSlice({
       state.loadingClinic = true;
     });
     builder.addCase(getClinics.fulfilled, (state, action) => {
-      state.clinics = action.payload;
+      state.clinics = action.payload.data;
+      state.counts = action.payload.counts;
       state.loadingClinic = false;
     });
-    builder.addCase(getClinics.rejected, (state, action) => {
-      state.errorAction = action;
-      state.clinics = action.payload;
+    builder.addCase(getClinics.rejected, (state, action: any) => {
+      state.clinics = action.payload.data;
+      state.counts = action.payload.counts;
       state.loadingClinic = false;
     });
 
@@ -80,12 +83,12 @@ export const clinicSlice = createSlice({
       state.loadingClinic = true;
     });
     builder.addCase(getClinicsTop.fulfilled, (state, action) => {
-      state.clinicsTop = action.payload;
+      state.clinicsTop = action.payload.data;
+      state.totalClinic = action.payload.counts;
       state.loadingClinic = false;
     });
     builder.addCase(getClinicsTop.rejected, (state, action) => {
-      state.errorAction = action;
-      state.clinicsTop = action.payload;
+      state.clinicsTop = [];
       state.loadingClinic = false;
     });
     //rating

@@ -39,6 +39,7 @@ export interface DoctorState {
   successAction: any | null;
   errorAction: any | null;
   doctors: any;
+  counts: any;
 }
 export interface ClinicState {
   loadingClinic: boolean;
@@ -46,6 +47,8 @@ export interface ClinicState {
   errorAction: any | null;
   clinics: any;
   clinicsTop: any;
+  counts: any;
+  totalClinic: any;
 }
 export interface SpecialtyState {
   loadingSpecialty: boolean;

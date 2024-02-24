@@ -141,10 +141,16 @@ const TabProfile = () => {
             </Button> */}
             <Button
               variant="contained"
-              color="primary"
+              sx={{
+                display: "flex",
+                gap: "4px",
+                borderRadius: "8px",
+                background:
+                  "linear-gradient(83.63deg,#7cdead 33.34%,#9de7c2 113.91%);",
+              }}
               onClick={handleOpenFileDialog}
             >
-              Thay đổi
+              Thay ảnh đại diện
             </Button>
           </>
         );

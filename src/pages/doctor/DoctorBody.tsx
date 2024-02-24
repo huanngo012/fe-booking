@@ -29,7 +29,7 @@ import EmptyPage from "../../components/emptyPage";
 
 const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { doctors } = useSelector((state: any) => state.doctor);
+  const { doctors, counts } = useSelector((state: any) => state.doctor);
   const pageSizeDefault = 10;
   const [openSearchRecommendation, setOpenSearchRecommendation] =
     useState(false);
@@ -78,7 +78,7 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
     setDoctorsSearch(doctors);
   }, [doctors]);
 
-  const totalPage = Math.ceil(doctors?.counts / pageSizeDefault);
+  const totalPage = Math.ceil(counts / pageSizeDefault);
 
   return (
     <Box className="hospital__body">
@@ -192,8 +192,8 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
         </Stack>
       </Stack>
       <Stack flexDirection="row" flexWrap="wrap" rowGap="20px" maxWidth="100%">
-        {doctorsSearch?.data?.length > 0 ? (
-          doctorsSearch?.data?.map((el: any, index: any) => (
+        {doctorsSearch?.length > 0 ? (
+          doctorsSearch?.map((el: any, index: any) => (
             <Fragment key={index}>
               <DoctorCard data={el} />
             </Fragment>
@@ -202,7 +202,7 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
           <EmptyPage title="Không tìm thấy bác sĩ" />
         )}
       </Stack>
-      {doctorsSearch?.data?.length > 0 && totalPage && (
+      {doctorsSearch?.length > 0 && totalPage && (
         <Pagination
           count={totalPage}
           page={page}

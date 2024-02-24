@@ -7,6 +7,7 @@ const initialState: DoctorState = {
   successAction: null,
   errorAction: null,
   doctors: [],
+  counts: 0,
 };
 
 export const getDoctors = createAsyncThunk(
@@ -34,12 +35,14 @@ export const doctorSlice = createSlice({
       state.loadingDoctor = true;
     });
     builder.addCase(getDoctors.fulfilled, (state, action) => {
-      state.doctors = action.payload;
       state.loadingDoctor = false;
+      state.doctors = action.payload.data;
+      state.counts = action.payload.counts;
     });
-    builder.addCase(getDoctors.rejected, (state, action) => {
-      state.errorAction = action.payload;
+    builder.addCase(getDoctors.rejected, (state, action: any) => {
       state.loadingDoctor = false;
+      state.doctors = action.payload.data;
+      state.counts = action.payload.counts;
     });
   },
 });

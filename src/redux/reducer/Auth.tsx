@@ -33,9 +33,9 @@ export const updateUser = createAsyncThunk(
   async (data: any, { rejectWithValue }) => {
     const response: any = await apis.apiUpdateUser(data);
     if (!response?.success) {
-      return rejectWithValue(response?.message);
+      return rejectWithValue(response?.data);
     }
-    return response?.message;
+    return response?.data;
   }
 );
 export const register = createAsyncThunk(
@@ -73,9 +73,9 @@ export const resetPassword = createAsyncThunk(
   async (data: any, { rejectWithValue }) => {
     const response: any = await apis.apiResetPassword(data);
     if (!response?.success) {
-      return rejectWithValue(response?.message);
+      return rejectWithValue(response?.data);
     }
-    return response?.message;
+    return response?.data;
   }
 );
 
@@ -112,6 +112,7 @@ export const authSlice = createSlice({
       state.token = null;
       state.loading = false;
     });
+    //Update user
     builder.addCase(updateUser.pending, (state) => {
       state.loading = true;
       state.successAction = null;
@@ -119,7 +120,7 @@ export const authSlice = createSlice({
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.successAction = action.payload;
+      state.successAction = "Cập nhật thông tin người dùng thành công";
     });
     builder.addCase(updateUser.rejected, (state, action) => {
       state.loading = false;

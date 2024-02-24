@@ -1,7 +1,7 @@
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import { HospitalSectionProps } from "./module";
 import { renderStartFromNumber } from "../../utils/helper";
@@ -10,11 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { getClinicsTop } from "../../redux/reducer/Clinic";
 import CustomSkeleton from "../../components/skeleton";
+import { useNavigate } from "react-router-dom";
+import { path } from "../../utils/constant";
 
 const HospitalSection = React.forwardRef(
   ({ hospitalIsVisible }: HospitalSectionProps, ref) => {
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const { clinicsTop, loadingClinic } = useSelector(
+    const { clinicsTop, loadingClinic, totalClinic } = useSelector(
       (state: any) => state.clinic
     );
 
@@ -53,7 +56,7 @@ const HospitalSection = React.forwardRef(
             Bệnh viện tiêu biểu
           </Typography>
           <Typography variant="label1" color="#858585">
-            {`Đặt lịch khám với hơn ${clinicsTop?.counts} bệnh viện trên khắp cả nước`}
+            {`Đặt lịch khám với hơn ${totalClinic} bệnh viện trên khắp cả nước`}
           </Typography>
         </Box>
         <Box width="100%">
@@ -62,21 +65,26 @@ const HospitalSection = React.forwardRef(
             {...settings}
           >
             {!loadingClinic
-              ? clinicsTop?.data?.map((el: any, index: any) => (
+              ? clinicsTop?.map((el: any, index: any) => (
                   <Box key={index} padding="10px">
-                    <Box className="hospital-section__card">
-                      <Box
-                        width={heightImg}
-                        minHeight={heightImg}
-                        maxHeight={heightImg}
-                        borderRadius="16px"
-                        component="img"
-                        src={el.logo}
-                        alt={el.name}
-                        sx={{
-                          transition: "all 0.15s ease-in",
-                        }}
-                      />
+                    <Box
+                      className="hospital-section__card"
+                      onClick={() => navigate(`${path.HOSPITALS}/${el._id}`)}
+                    >
+                      <Stack width="100%" alignItems="center">
+                        <Box
+                          width={heightImg}
+                          minHeight={heightImg}
+                          maxHeight={heightImg}
+                          borderRadius="16px"
+                          component="img"
+                          src={el.logo}
+                          alt={el.name}
+                          sx={{
+                            transition: "all 0.15s ease-in",
+                          }}
+                        />
+                      </Stack>
                       <Box
                         component="span"
                         sx={{ display: "flex", height: "16px" }}

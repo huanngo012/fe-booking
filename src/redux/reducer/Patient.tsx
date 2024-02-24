@@ -14,9 +14,9 @@ export const getPatients = createAsyncThunk(
   async (data: any, { rejectWithValue }) => {
     const response: any = await apis.apiGetPatients(data);
     if (!response.success) {
-      return rejectWithValue(response);
+      return rejectWithValue(response.data);
     }
-    return response;
+    return response.data;
   }
 );
 export const addPatient = createAsyncThunk(
@@ -24,9 +24,9 @@ export const addPatient = createAsyncThunk(
   async (data: any, { rejectWithValue }) => {
     const response: any = await apis.apiAddPatient(data);
     if (!response.success) {
-      return rejectWithValue(response.message);
+      return rejectWithValue(response.data);
     }
-    return response.message;
+    return response.data;
   }
 );
 export const updatePatient = createAsyncThunk(
@@ -34,9 +34,9 @@ export const updatePatient = createAsyncThunk(
   async ({ id, data }: { id: string; data: any }, { rejectWithValue }) => {
     const response: any = await apis.apiUpdatePatient(id, data);
     if (!response.success) {
-      return rejectWithValue(response.message);
+      return rejectWithValue(response.data);
     }
-    return response.message;
+    return response.data;
   }
 );
 
@@ -45,14 +45,14 @@ export const deletePatient = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     const response: any = await apis.apiDeletePatient(id);
     if (!response.success) {
-      return rejectWithValue(response.message);
+      return rejectWithValue(response.data);
     }
-    return response.message;
+    return response.data;
   }
 );
 
 export const patientSlice = createSlice({
-  name: "specialty",
+  name: "patient",
   initialState,
   reducers: {
     resetPatientStatus: (state) => {
@@ -81,7 +81,8 @@ export const patientSlice = createSlice({
     });
     builder.addCase(addPatient.fulfilled, (state, action) => {
       state.loadingPatient = false;
-      state.successAction = action.payload;
+      state.patients.push(action.payload);
+      state.successAction = "Thêm hồ sơ thành công";
     });
     builder.addCase(addPatient.rejected, (state, action) => {
       state.loadingPatient = false;
@@ -95,7 +96,10 @@ export const patientSlice = createSlice({
     });
     builder.addCase(updatePatient.fulfilled, (state, action) => {
       state.loadingPatient = false;
-      state.successAction = action.payload;
+      state.patients = state.patients.map((el: any) =>
+        el?._id === action.payload?._id ? action.payload : el
+      );
+      state.successAction = "Cập nhật hồ sơ thành công";
     });
     builder.addCase(updatePatient.rejected, (state, action) => {
       state.loadingPatient = false;
@@ -109,7 +113,10 @@ export const patientSlice = createSlice({
     });
     builder.addCase(deletePatient.fulfilled, (state, action) => {
       state.loadingPatient = false;
-      state.successAction = action.payload;
+      state.successAction = "Xóa hồ sơ thành công";
+      state.patients = state.patients.filter(
+        (el: any) => el?._id !== action.payload?._id
+      );
     });
     builder.addCase(deletePatient.rejected, (state, action) => {
       state.loadingPatient = false;

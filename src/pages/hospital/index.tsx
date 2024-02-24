@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { images } from "../../assets";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useLocation, useNavigate } from "react-router-dom";
 import { paddingScreen, path } from "../../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
@@ -46,7 +46,12 @@ const HospitalPage = () => {
   const gapCard = isDesktop ? "40px" : "10px";
 
   const dispatch = useDispatch<AppDispatch>();
-  const { clinics, loadingClinic } = useSelector((state: any) => state.clinic);
+  const { clinics, loadingClinic, counts } = useSelector(
+    (state: any) => state.clinic
+  );
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
   const pageSizeDefault = 10;
 
@@ -87,7 +92,7 @@ const HospitalPage = () => {
     setPage(value);
   };
 
-  const [searchLabel, setSearchLabel] = useState("");
+  const [searchLabel, setSearchLabel] = useState(searchParams.get("name"));
   const [clinicsSearch, setClinicsSearch] = useState<any>({});
 
   const debounceSearchLabel = useDebounce(searchLabel, 700);
@@ -120,7 +125,7 @@ const HospitalPage = () => {
     setClinicsSearch(clinics);
   }, [clinics]);
 
-  const totalPage = Math.ceil(clinics?.counts / pageSizeDefault);
+  const totalPage = Math.ceil(counts / pageSizeDefault);
 
   return (
     <Box className="hospital__wrapper">
@@ -162,8 +167,15 @@ const HospitalPage = () => {
             }}
           >
             <TextField
+              value={searchLabel}
               placeholder="Tìm kiếm"
-              onChange={(e: any) => setSearchLabel(e.target.value)}
+              onChange={(e: any) => {
+                setSearchLabel(e.target.value);
+                navigate({
+                  pathname: `${path.HOSPITALS}`,
+                  search: `name=${e.target.value}`,
+                });
+              }}
               sx={{
                 "&.MuiFormControl-root": {
                   width: "100%",
@@ -247,8 +259,9 @@ const HospitalPage = () => {
                         direction="column"
                         gap={0.5}
                       >
-                        {searchedResultList.map((item: any) => (
+                        {searchedResultList.map((item: any, index: any) => (
                           <MenuItem
+                            key={index}
                             className="search-recommend-result__item"
                             onClick={() => {
                               setProvince(item.province_name);
@@ -269,8 +282,8 @@ const HospitalPage = () => {
           </Stack>
           <Stack flexDirection="row" flexWrap="wrap" rowGap="20px" width="100%">
             {!loadingClinic ? (
-              clinicsSearch.success ? (
-                clinicsSearch?.data?.map((el: any, index: any) => (
+              clinicsSearch.length > 0 ? (
+                clinicsSearch?.map((el: any, index: any) => (
                   <Stack
                     key={index}
                     flex={widthCard}
@@ -360,7 +373,7 @@ const HospitalPage = () => {
               ))
             )}
           </Stack>
-          {!loadingClinic && clinicsSearch.success && (
+          {!loadingClinic && clinicsSearch.length > 0 && (
             <Pagination
               count={totalPage}
               page={page}

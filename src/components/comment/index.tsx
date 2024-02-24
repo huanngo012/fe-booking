@@ -4,6 +4,7 @@ import { renderStartFromNumber } from "../../utils/helper";
 import Votebar from "./Votebar";
 import CommentCard from "./CommentCard";
 import { ReactNode } from "react";
+import { useSelector } from "react-redux";
 
 const Comment = ({
   ratings,
@@ -17,6 +18,17 @@ const Comment = ({
   popUpComment?: ReactNode;
 }) => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+
+  const { current } = useSelector((state: any) => state.auth);
+
+  ratings.sort((a: any, b: any) =>
+    a?.postedBy?._id === current?._id
+      ? -1
+      : b?.postedBy?._id === current?._id
+        ? 1
+        : 0
+  );
+
   return (
     <Stack
       flexDirection="column"
@@ -78,10 +90,18 @@ const Comment = ({
             ))}
         </Stack>
       </Stack>
-      <Stack flexDirection="column" alignItems="center">
-        <Typography variant="label1">Đánh giá sản phẩm này?</Typography>
-        {popUpComment}
-      </Stack>
+      {ratings?.some((el: any) => el?.postedBy?._id === current?._id) ? (
+        <Stack flexDirection="column" alignItems="center">
+          <Typography variant="label1">
+            Bạn đã đánh giá bệnh viện này
+          </Typography>
+        </Stack>
+      ) : (
+        <Stack flexDirection="column" alignItems="center">
+          <Typography variant="label1">Đánh giá bệnh viện này?</Typography>
+          {popUpComment}
+        </Stack>
+      )}
       <Stack flexDirection="column" gap="16px" width="100%">
         {ratings?.map((el: any, index: any) => (
           <CommentCard key={index} data={{ ...el, clinicID }} />

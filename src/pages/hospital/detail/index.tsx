@@ -69,19 +69,19 @@ const HospitalDetailPage = () => {
 
   const addressClinic = `${clinic?.address?.detail ? `${clinic?.address?.detail}, ` : ""} ${clinic?.address?.ward ? `${clinic?.address?.ward}, ` : ""} ${clinic?.address?.district ? `${clinic?.address?.district}, ` : ""}${clinic?.address?.province} `;
 
-  // useEffect(() => {
-  //   if (successAction || errorAction) {
-  //     if (successAction) {
-  //       setPayload({});
-  //     }
-  //     displayNotification({
-  //       message: errorAction || successAction,
-  //       severity: successAction ? "success" : "error",
-  //       title: successAction ? "Thành công" : "Thất bại",
-  //     });
-  //     dispatch(resetClinicStatus());
-  //   }
-  // }, [successAction, errorAction]);
+  useEffect(() => {
+    if (successAction || errorAction) {
+      if (successAction) {
+        setPayload({});
+      }
+      displayNotification({
+        message: errorAction || successAction,
+        severity: successAction ? "success" : "error",
+        title: successAction ? "Thành công" : "Thất bại",
+      });
+      dispatch(resetClinicStatus());
+    }
+  }, [successAction, errorAction]);
 
   return (
     <>

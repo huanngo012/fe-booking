@@ -3,7 +3,6 @@ import {
   ClickAwayListener,
   Container,
   InputAdornment,
-  MenuItem,
   Stack,
   TextField,
   Typography,
@@ -26,8 +25,6 @@ import { getDoctors } from "../../redux/reducer/Doctor";
 import { useNavigate } from "react-router-dom";
 import { path } from "../../utils/constant";
 import CustomSkeleton from "../../components/skeleton";
-
-const { LocationIcon } = images;
 
 const IntroSection = React.forwardRef(
   ({ introIsVisible }: IntroSectionProps, ref) => {
@@ -207,13 +204,19 @@ const IntroSection = React.forwardRef(
                             variant="label4"
                             component="i"
                             color="var(--primary)"
+                            sx={{
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              navigate(`${path.HOSPITALS}?name=${searchLabel}`)
+                            }
                           >
                             Xem tất cả
                           </Typography>
                         </Stack>
                         {!loadingClinic ? (
-                          clinicsSearch.success ? (
-                            clinicsSearch?.data?.map((el: any, index: any) => (
+                          clinicsSearch.length > 0 ? (
+                            clinicsSearch?.map((el: any, index: any) => (
                               <Box
                                 key={index}
                                 className="search__card"
@@ -289,13 +292,19 @@ const IntroSection = React.forwardRef(
                             variant="label4"
                             component="i"
                             color="var(--primary)"
+                            sx={{
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              navigate(`${path.DOCTORS}?name=${searchLabel}`)
+                            }
                           >
                             Xem tất cả
                           </Typography>
                         </Stack>
                         {!loadingDoctor ? (
-                          doctorsSearch.success ? (
-                            doctorsSearch?.data?.map((el: any, index: any) => (
+                          doctorsSearch.length > 0 ? (
+                            doctorsSearch?.map((el: any, index: any) => (
                               <Box
                                 key={index}
                                 className="search__card"
@@ -352,26 +361,6 @@ const IntroSection = React.forwardRef(
                             />
                           ))
                         )}
-                      </Stack>
-                      <Stack direction="column" gap={0.5}>
-                        <Stack
-                          direction="row"
-                          justifyContent="space-between"
-                          alignItems="center"
-                          padding="10px"
-                          sx={{ backgroundColor: "var(--blue-60)" }}
-                        >
-                          <Typography variant="label2" color="var(--secondary)">
-                            Chuyên khoa
-                          </Typography>
-                          <Typography
-                            variant="label3"
-                            component="i"
-                            color="var(--primary)"
-                          >
-                            Xem tất cả
-                          </Typography>
-                        </Stack>
                       </Stack>
                     </Stack>
                   )}

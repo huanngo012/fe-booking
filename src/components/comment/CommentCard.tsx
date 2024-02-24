@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 const CommentCard = ({ data }: { data?: any }) => {
   const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
   const { current } = useSelector((state: any) => state.auth);
+
   return (
     <Stack flexDirection="row" gap="16px">
       <Box width="35px">
@@ -72,7 +73,7 @@ const CommentCard = ({ data }: { data?: any }) => {
               </Typography>
             </Stack>
           </Stack>
-          {data?.postedBy === current?._id && (
+          {data?.postedBy?._id === current?._id && (
             <Box minWidth="30px">
               <ActionMenu
                 actionList={
