@@ -215,7 +215,7 @@ const IntroSection = React.forwardRef(
                           </Typography>
                         </Stack>
                         {!loadingClinic ? (
-                          clinicsSearch.length > 0 ? (
+                          clinicsSearch?.length > 0 ? (
                             clinicsSearch?.map((el: any, index: any) => (
                               <Box
                                 key={index}
@@ -303,7 +303,7 @@ const IntroSection = React.forwardRef(
                           </Typography>
                         </Stack>
                         {!loadingDoctor ? (
-                          doctorsSearch.length > 0 ? (
+                          doctorsSearch?.length > 0 ? (
                             doctorsSearch?.map((el: any, index: any) => (
                               <Box
                                 key={index}

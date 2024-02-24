@@ -282,7 +282,7 @@ const HospitalPage = () => {
           </Stack>
           <Stack flexDirection="row" flexWrap="wrap" rowGap="20px" width="100%">
             {!loadingClinic ? (
-              clinicsSearch.length > 0 ? (
+              clinicsSearch?.length > 0 ? (
                 clinicsSearch?.map((el: any, index: any) => (
                   <Stack
                     key={index}
@@ -373,7 +373,7 @@ const HospitalPage = () => {
               ))
             )}
           </Stack>
-          {!loadingClinic && clinicsSearch.length > 0 && (
+          {!loadingClinic && clinicsSearch?.length > 0 && (
             <Pagination
               count={totalPage}
               page={page}
