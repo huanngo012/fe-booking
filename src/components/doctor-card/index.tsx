@@ -44,8 +44,14 @@ const DoctorCard = ({ data }: { data?: any }) => {
           width="76px"
           height="76px"
           component="img"
-          src={data?._id?.avatar}
-          alt={data?._id?.fullName}
+          src={
+            data?._id?.avatar
+              ? data?._id?.avatar
+              : data?.gender === "MALE"
+                ? "https://res.cloudinary.com/dc4o6u6wm/image/upload/v1708694374/booking/bsNam"
+                : "https://res.cloudinary.com/dc4o6u6wm/image/upload/v1708694374/booking/bsNu"
+          }
+          alt=""
         />
         <Stack
           flexDirection="column"
@@ -69,19 +75,25 @@ const DoctorCard = ({ data }: { data?: any }) => {
           <Stack maxWidth="270px">
             <SelectDate label="Chọn ngày:" value={date} setValue={setDate} />
           </Stack>
-          <Stack
-            flexDirection="row"
-            flexWrap={isTablet ? "wrap" : "nowrap"}
-            rowGap="24px"
-            gap="24px"
-            sx={{ overflow: "auto" }}
-          >
-            {schedule?.timeType?.map((data: any, index: any) => (
-              <Fragment key={index}>
-                <PopupBooking schedule={schedule} time={data?.time} />
-              </Fragment>
-            ))}
-          </Stack>
+          {schedule?.timeType ? (
+            <Stack
+              flexDirection="row"
+              flexWrap={isTablet ? "wrap" : "nowrap"}
+              rowGap="24px"
+              gap="24px"
+              sx={{ overflow: "auto" }}
+            >
+              {schedule?.timeType?.map((data: any, index: any) => (
+                <Fragment key={index}>
+                  <PopupBooking schedule={schedule} time={data?.time} />
+                </Fragment>
+              ))}
+            </Stack>
+          ) : (
+            <Typography variant="label1">
+              Bác sĩ hiện không có lịch khám
+            </Typography>
+          )}
 
           <Stack flexDirection="row" gap="16px">
             <Button

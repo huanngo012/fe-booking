@@ -126,6 +126,7 @@ const HospitalPage = () => {
   }, [clinics]);
 
   const totalPage = Math.ceil(counts / pageSizeDefault);
+  console.log(totalPage);
 
   return (
     <Box className="hospital__wrapper">

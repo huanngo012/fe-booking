@@ -29,7 +29,9 @@ import EmptyPage from "../../components/emptyPage";
 
 const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { doctors, counts } = useSelector((state: any) => state.doctor);
+  const { doctors, counts, loadingDoctor } = useSelector(
+    (state: any) => state.doctor
+  );
   const pageSizeDefault = 10;
   const [openSearchRecommendation, setOpenSearchRecommendation] =
     useState(false);
@@ -79,7 +81,6 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
   }, [doctors]);
 
   const totalPage = Math.ceil(counts / pageSizeDefault);
-
   return (
     <Box className="hospital__body">
       <Stack
@@ -202,7 +203,7 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
           <EmptyPage title="Không tìm thấy bác sĩ" />
         )}
       </Stack>
-      {doctorsSearch?.length > 0 && totalPage && (
+      {!loadingDoctor && doctorsSearch?.length > 0 && (
         <Pagination
           count={totalPage}
           page={page}

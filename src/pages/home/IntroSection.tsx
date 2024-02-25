@@ -317,7 +317,13 @@ const IntroSection = React.forwardRef(
                                   width="40px"
                                   height="40px"
                                   component="img"
-                                  src={el?._id?.avatar}
+                                  src={
+                                    el?._id?.avatar
+                                      ? el?._id?.avatar
+                                      : el?.gender === "MALE"
+                                        ? "https://res.cloudinary.com/dc4o6u6wm/image/upload/v1708694374/booking/bsNam"
+                                        : "https://res.cloudinary.com/dc4o6u6wm/image/upload/v1708694374/booking/bsNu"
+                                  }
                                   alt=""
                                 />
                                 <Stack
