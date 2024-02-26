@@ -61,7 +61,9 @@ const DoctorCard = ({ data }: { data?: any }) => {
             overflow: "hidden",
           }}
         >
-          <Typography variant="h6">{data?._id?.fullName}</Typography>
+          <Typography variant="h6">
+            {data?.position} {data?._id?.fullName}
+          </Typography>
           <Typography
             variant="body2"
             display="flex"

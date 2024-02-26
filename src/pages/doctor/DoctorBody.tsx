@@ -8,6 +8,8 @@ import {
   PaginationItem,
   Stack,
   TextField,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 import {
   PiCaretDown,
@@ -20,38 +22,90 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { Fragment, useEffect, useState } from "react";
 import { getDoctors } from "../../redux/reducer/Doctor";
-import { CiLocationOn } from "react-icons/ci";
+import { CiStethoscope } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
-import Highlighter from "react-highlight-words";
 import DoctorCard from "../../components/doctor-card";
 import useDebounce from "../../hooks/useDebounce";
 import EmptyPage from "../../components/emptyPage";
+import { apiGetAllClinics } from "../../apis";
+import unidecode from "unidecode";
+import { LiaHospitalAltSolid } from "react-icons/lia";
+import { theme } from "../../themes/Theme";
+import CustomSkeleton from "../../components/skeleton";
+import { useLocation, useNavigate } from "react-router-dom";
+import { path } from "../../utils/constant";
 
-const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
+const DoctorBody = ({ clinicSearch = {} }: { clinicSearch?: any }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { doctors, counts, loadingDoctor } = useSelector(
     (state: any) => state.doctor
   );
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isOversize = useMediaQuery(theme.breakpoints.up("oversize"));
+  const widthCard = isOversize && !clinicSearch?.name ? "50%" : "100%";
   const pageSizeDefault = 10;
-  const [openSearchRecommendation, setOpenSearchRecommendation] =
-    useState(false);
-  const [keyword, setKeyword] = useState("");
-  const [province, setProvince] = useState("");
-  const [searchedResultList, setSearchedResultList] = useState([]);
+  const [openSearchClinics, setOpenSearchClinics] = useState(false);
+  const [openSearchSpecialtys, setOpenSearchSpecialtys] = useState(false);
+  const [keywordClinic, setKeywordClinic] = useState("");
+  const [keywordSpecialty, setKeywordSpecialty] = useState("");
+  const [clinics, setClinics] = useState<any>([]);
+  const [clinic, setClinic] = useState<any>(clinicSearch);
+  const [nameClinic, setNameClinic] = useState(
+    clinicSearch?.name ? clinicSearch?.name : ""
+  );
+  const [nameSpecialty, setNameSpecialty] = useState("");
+  const [searchedspecialtys, setSearchedSpecialtys] = useState<any>([]);
+  const [searchedClinics, setSearchedClinics] = useState([]);
   const [page, setPage] = useState<number>(1);
-
-  const handleOpenActionMenu = () => setOpenSearchRecommendation(true);
-  const handleCloseActionMenu = () => setOpenSearchRecommendation(false);
 
   const handleChangePage = (e: any, value: number) => {
     setPage(value);
   };
 
-  const [searchLabel, setSearchLabel] = useState("");
+  const fetchApiClinic = async () => {
+    const response: any = await apiGetAllClinics({
+      fields: "name",
+    });
+    if (response?.success) {
+      setClinics(response?.data);
+    }
+  };
+  useEffect(() => {
+    fetchApiClinic();
+  }, []);
+
+  useEffect(() => {
+    if (keywordClinic !== "") {
+      setOpenSearchClinics(true);
+      const filteredData = clinics.filter((data: any) =>
+        unidecode(data.name.toLowerCase()).includes(
+          unidecode(keywordClinic.toLowerCase())
+        )
+      );
+      setSearchedClinics(filteredData as []);
+    } else setSearchedClinics(clinics as []);
+  }, [keywordClinic, clinics]);
+
+  useEffect(() => {
+    if (keywordSpecialty !== "") {
+      setOpenSearchSpecialtys(true);
+      const filteredData = clinic?.specialtyID?.filter((data: any) =>
+        unidecode(data.name.toLowerCase()).includes(
+          unidecode(keywordSpecialty.toLowerCase())
+        )
+      );
+      setSearchedSpecialtys(filteredData as []);
+    } else setSearchedSpecialtys(clinic?.specialtyID as []);
+  }, [keywordSpecialty, clinic]);
+
+  const [searchLabel, setSearchLabel] = useState(searchParams.get("name"));
   const [doctorsSearch, setDoctorsSearch] = useState<any>({});
 
   const debounceSearchLabel = useDebounce(searchLabel, 700);
-  const debounceSearchProvince = useDebounce(province, 700);
+  const debounceSearchNameClinic = useDebounce(nameClinic, 700);
+  const debounceSearchNameSpecialty = useDebounce(nameSpecialty, 700);
   useEffect(() => {
     setPage(1);
 
@@ -61,9 +115,14 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
         page: 1,
         nameClinic: nameClinic,
         fullName: searchLabel,
+        nameSpecialty: nameSpecialty,
       })
     );
-  }, [debounceSearchLabel, debounceSearchProvince, nameClinic]);
+  }, [
+    debounceSearchLabel,
+    debounceSearchNameClinic,
+    debounceSearchNameSpecialty,
+  ]);
 
   useEffect(() => {
     dispatch(
@@ -84,24 +143,30 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
   return (
     <Box className="hospital__body">
       <Stack
-        flexDirection="row"
+        flexDirection="column"
         sx={{
-          maxWidth: "700px",
+          maxWidth: "1000px",
           width: "100%",
           margin: "auto",
         }}
       >
         <TextField
+          value={searchLabel}
           placeholder="Tìm kiếm"
-          onChange={(e: any) => setSearchLabel(e.target.value)}
+          onChange={(e: any) => {
+            setSearchLabel(e.target.value);
+            navigate({
+              pathname: `${path.DOCTORS}`,
+              search: `name=${e.target.value}`,
+            });
+          }}
           sx={{
             "&.MuiFormControl-root": {
               width: "100%",
             },
             "& .MuiOutlinedInput-root": {
               backgroundColor: "white",
-              borderTopLeftRadius: "16px",
-              borderBottomLeftRadius: "16px",
+              borderRadius: "16px",
               boxShadow: "4px 8px 30px 0 rgba(177,196,218,.35)",
               padding: "6px 20px",
             },
@@ -114,93 +179,202 @@ const DoctorBody = ({ nameClinic }: { nameClinic?: string }) => {
             ),
           }}
         />
-        <Stack direction="row" gap={1} alignItems="center" position="relative">
-          {" "}
-          <ClickAwayListener onClickAway={handleCloseActionMenu}>
-            <Box>
-              <TextField
-                placeholder="Tất cả địa điểm"
-                autoComplete="off"
-                value={keyword || province}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderTopRightRadius: "16px",
-                    borderBottomRightRadius: "16px",
-                    boxShadow: "4px 8px 30px 0 rgba(177,196,218,.35)",
-                    padding: "6px 20px",
-                  },
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <CiLocationOn color="var(--text-tertiary)" size="20px" />
-                    </InputAdornment>
-                  ),
-                  endAdornment:
-                    keyword !== "" || province !== "" ? (
-                      <IoMdClose
-                        size={24}
-                        color="var(--text-tertiary)"
-                        cursor="pointer"
-                        onClick={() => {
-                          setKeyword("");
-                          setProvince("");
-                        }}
-                      />
-                    ) : (
-                      <PiCaretDown
-                        size={24}
-                        color="var(--text-tertiary)"
-                        cursor="pointer"
-                      />
+        <Stack flexDirection="row" width="100%">
+          <Stack
+            direction="row"
+            gap={1}
+            alignItems="center"
+            position="relative"
+            width="100%"
+          >
+            {" "}
+            <ClickAwayListener onClickAway={() => setOpenSearchClinics(false)}>
+              <Box width="100%">
+                <TextField
+                  disabled={clinicSearch?.name ? true : false}
+                  placeholder="Tất cả bệnh viện"
+                  autoComplete="off"
+                  value={keywordClinic || nameClinic}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "16px",
+                      boxShadow: "4px 8px 30px 0 rgba(177,196,218,.35)",
+                      padding: "6px 20px",
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LiaHospitalAltSolid
+                          color="var(--text-tertiary)"
+                          size="20px"
+                        />
+                      </InputAdornment>
                     ),
-                }}
-                onChange={(e) => {
-                  setKeyword(e.target.value);
-                  setProvince("");
-                }}
-                onClick={() => handleOpenActionMenu()}
-              />
-              {openSearchRecommendation && searchedResultList.length !== 0 && (
-                <Stack
-                  className="search-recommend-result"
-                  direction="column"
-                  gap={0.5}
-                >
-                  {searchedResultList.map((item: any) => (
-                    <MenuItem
-                      className="search-recommend-result__item"
-                      onClick={() => {
-                        setProvince(item.stationName);
-                        setKeyword("");
-                      }}
-                      selected={item.stationName === province}
-                    >
-                      <Highlighter
-                        className="highlight-box"
-                        highlightClassName="highlight-words"
-                        searchWords={[...keyword.split(" ")]}
-                        autoEscape={true}
-                        textToHighlight={item.stationName}
-                      />
-                    </MenuItem>
-                  ))}
-                </Stack>
-              )}
-            </Box>
-          </ClickAwayListener>
+                    endAdornment:
+                      keywordClinic !== "" || nameClinic !== "" ? (
+                        <IoMdClose
+                          size={24}
+                          color="var(--text-tertiary)"
+                          cursor="pointer"
+                          onClick={() => {
+                            setKeywordClinic("");
+                            setNameClinic("");
+                            setNameSpecialty("");
+                          }}
+                        />
+                      ) : (
+                        <PiCaretDown
+                          size={24}
+                          color="var(--text-tertiary)"
+                          cursor="pointer"
+                        />
+                      ),
+                  }}
+                  onChange={(e) => {
+                    setKeywordClinic(e.target.value);
+                    setNameClinic("");
+                    setNameSpecialty("");
+                  }}
+                  onClick={() => setOpenSearchClinics(true)}
+                />
+                {openSearchClinics && searchedClinics?.length !== 0 && (
+                  <Stack
+                    className="search-recommend-result"
+                    maxHeight="240px"
+                    direction="column"
+                    gap={0.5}
+                  >
+                    {searchedClinics.map((item: any, index: any) => (
+                      <MenuItem
+                        key={index}
+                        className="search-recommend-result__item"
+                        onClick={() => {
+                          setNameClinic(item.name);
+                          setClinic(item);
+                          setKeywordClinic("");
+                        }}
+                        selected={item.name === nameClinic}
+                      >
+                        <Typography variant="body2">{item.name}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Stack>
+                )}
+              </Box>
+            </ClickAwayListener>
+          </Stack>
+          <Stack
+            direction="row"
+            gap={1}
+            alignItems="center"
+            position="relative"
+            width="100%"
+          >
+            {" "}
+            <ClickAwayListener
+              onClickAway={() => setOpenSearchSpecialtys(false)}
+            >
+              <Box width="100%">
+                <TextField
+                  disabled={nameClinic === "" ? true : false}
+                  placeholder="Tất cả chuyên khoa"
+                  autoComplete="off"
+                  value={keywordSpecialty || nameSpecialty}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "16px",
+                      boxShadow: "4px 8px 30px 0 rgba(177,196,218,.35)",
+                      padding: "6px 20px",
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CiStethoscope
+                          color="var(--text-tertiary)"
+                          size="20px"
+                        />
+                      </InputAdornment>
+                    ),
+                    endAdornment:
+                      keywordSpecialty !== "" || nameSpecialty !== "" ? (
+                        <IoMdClose
+                          size={24}
+                          color="var(--text-tertiary)"
+                          cursor="pointer"
+                          onClick={() => {
+                            setKeywordSpecialty("");
+                            setNameSpecialty("");
+                          }}
+                        />
+                      ) : (
+                        <PiCaretDown
+                          size={24}
+                          color="var(--text-tertiary)"
+                          cursor="pointer"
+                        />
+                      ),
+                  }}
+                  onChange={(e) => {
+                    setKeywordSpecialty(e.target.value);
+                    setNameSpecialty("");
+                  }}
+                  onClick={() => setOpenSearchSpecialtys(true)}
+                />
+                {openSearchSpecialtys && searchedspecialtys?.length !== 0 && (
+                  <Stack
+                    className="search-recommend-result"
+                    maxHeight="240px"
+                    direction="column"
+                    gap={0.5}
+                  >
+                    {searchedspecialtys?.map((item: any) => (
+                      <MenuItem
+                        className="search-recommend-result__item"
+                        onClick={() => {
+                          setNameSpecialty(item.name);
+                          setKeywordSpecialty("");
+                        }}
+                        selected={item.name === nameSpecialty}
+                      >
+                        <Typography variant="body2">{item.name}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Stack>
+                )}
+              </Box>
+            </ClickAwayListener>
+          </Stack>
         </Stack>
       </Stack>
-      <Stack flexDirection="row" flexWrap="wrap" rowGap="20px" maxWidth="100%">
-        {doctorsSearch?.length > 0 ? (
-          doctorsSearch?.map((el: any, index: any) => (
-            <Fragment key={index}>
-              <DoctorCard data={el} />
-            </Fragment>
-          ))
+      <Stack
+        flexDirection="row"
+        flexWrap="wrap"
+        rowGap="20px"
+        maxWidth="100%"
+        width="100%"
+      >
+        {!loadingDoctor ? (
+          doctorsSearch?.length > 0 ? (
+            doctorsSearch?.map((el: any, index: any) => (
+              <Stack key={index} flex={widthCard} maxWidth={widthCard}>
+                <DoctorCard data={el} />
+              </Stack>
+            ))
+          ) : (
+            <EmptyPage title="Không tìm thấy bác sĩ" />
+          )
         ) : (
-          <EmptyPage title="Không tìm thấy bác sĩ" />
+          [...Array(10)].map((item, index: number) => (
+            <CustomSkeleton
+              key={index}
+              customKey={`skeleton__card-doctor-${index}`}
+              variant="card-doctor"
+            />
+          ))
         )}
       </Stack>
       {!loadingDoctor && doctorsSearch?.length > 0 && (

@@ -13,6 +13,8 @@ const CustomSkeleton = ({ customKey, variant }: CustomSkeletonProps) => {
       return <CardHospitalSkeleton customKey={customKey} />;
     case "card-hospital-section":
       return <CardHospitalSectionSkeleton customKey={customKey} />;
+    case "card-doctor":
+      return <CardDoctorSkeleton customKey={customKey} />;
     case "card-patient":
       return <CardPatientSkeleton customKey={customKey} />;
     case "card-search":
@@ -125,5 +127,40 @@ const CardSearchSkeleton = ({ customKey }: SkeletonProps) => {
         <Skeleton height={18} width="100%" />
       </Stack>
     </Box>
+  );
+};
+
+const CardDoctorSkeleton = ({ customKey }: SkeletonProps) => {
+  const isOversize = useMediaQuery(theme.breakpoints.up("oversize"));
+  const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
+  const widthCard = isOversize ? "50%" : "100%";
+  const gapCard = isDesktop ? "40px" : "10px";
+  return (
+    <Stack
+      key={customKey}
+      flex={widthCard}
+      maxWidth={widthCard}
+      padding="0 10px"
+    >
+      <Stack flex="100%" maxWidth="100%" padding="0 10px">
+        <Box className="hospital__card" gap={gapCard}>
+          <Skeleton height={76} width={76} />
+          <Stack
+            flexDirection="column"
+            gap="16px"
+            justifyContent="center"
+            width="100%"
+          >
+            <Skeleton height={24} width="100%" />
+            <Skeleton height={24} width="100%" />
+            <Skeleton height={48} width="100%" />
+            <Skeleton height={24} width="100%" />
+            <Stack flexDirection="row" gap="16px">
+              <Skeleton height={40} width="25%" />
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Stack>
   );
 };

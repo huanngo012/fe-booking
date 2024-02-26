@@ -280,7 +280,7 @@ const HospitalDetailPage = () => {
                 <MapBox address={addressClinic} />
               </Stack>
               <Stack flex={widthRight} maxWidth={widthRight} padding="0 10px">
-                <DoctorBody nameClinic={clinic?.name} />
+                <DoctorBody clinicSearch={clinic} />
               </Stack>
             </Stack>
             <Comment
