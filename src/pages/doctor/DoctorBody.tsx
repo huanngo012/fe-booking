@@ -9,7 +9,6 @@ import {
   Stack,
   TextField,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import {
   PiCaretDown,
@@ -30,7 +29,6 @@ import EmptyPage from "../../components/emptyPage";
 import { apiGetAllClinics } from "../../apis";
 import unidecode from "unidecode";
 import { LiaHospitalAltSolid } from "react-icons/lia";
-import { theme } from "../../themes/Theme";
 import CustomSkeleton from "../../components/skeleton";
 import { useLocation, useNavigate } from "react-router-dom";
 import { path } from "../../utils/constant";
@@ -43,8 +41,6 @@ const DoctorBody = ({ clinicSearch = {} }: { clinicSearch?: any }) => {
   );
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const isOversize = useMediaQuery(theme.breakpoints.up("oversize"));
-  const widthCard = isOversize && !clinicSearch?.name ? "50%" : "100%";
   const pageSizeDefault = 10;
   const [openSearchClinics, setOpenSearchClinics] = useState(false);
   const [openSearchSpecialtys, setOpenSearchSpecialtys] = useState(false);
@@ -156,7 +152,6 @@ const DoctorBody = ({ clinicSearch = {} }: { clinicSearch?: any }) => {
           onChange={(e: any) => {
             setSearchLabel(e.target.value);
             navigate({
-              pathname: `${path.DOCTORS}`,
               search: `name=${e.target.value}`,
             });
           }}
@@ -360,9 +355,9 @@ const DoctorBody = ({ clinicSearch = {} }: { clinicSearch?: any }) => {
         {!loadingDoctor ? (
           doctorsSearch?.length > 0 ? (
             doctorsSearch?.map((el: any, index: any) => (
-              <Stack key={index} flex={widthCard} maxWidth={widthCard}>
+              <Fragment key={index}>
                 <DoctorCard data={el} />
-              </Stack>
+              </Fragment>
             ))
           ) : (
             <EmptyPage title="Không tìm thấy bác sĩ" />

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
 import { apiGetAllSchedules } from "../../apis";
 import moment from "moment";
+import CustomSkeleton from "../skeleton";
 
 const { LocationIcon } = images;
 
@@ -21,12 +22,15 @@ const DoctorCard = ({ data }: { data?: any }) => {
 
   const [date, setDate] = useState(moment().add(1, "day").valueOf());
   const [schedule, setSchedule] = useState<any>({});
+  const [loading, setLoading] = useState(false);
 
   const getScheduleByDoctorID = async () => {
+    setLoading(true);
     const response: any = await apiGetAllSchedules({
       doctorID: data?._id?._id,
       date: date,
     });
+    setLoading(false);
     if (response?.success) {
       setSchedule(response?.data[0]);
     } else {
@@ -37,6 +41,21 @@ const DoctorCard = ({ data }: { data?: any }) => {
     getScheduleByDoctorID();
   }, [date]);
 
+  const convertDayToDateString = (day: any) => {
+    const today = new Date();
+    const dayOfWeek = (today.getDay() - 1 + day) % 7; // Lấy ngày trong tuần dựa trên ngày hiện tại
+    const targetDate = new Date(
+      today.setDate(today.getDate() - today.getDay() + dayOfWeek)
+    ); // Lấy ngày trong tuần dựa trên ngày hiện tại
+
+    const dateString = `${targetDate.getFullYear()}/${targetDate.getMonth() + 1}/${targetDate.getDate()}`;
+    return dateString;
+  };
+
+  // Chuyển đổi mảng các ngày thành mảng ngày/tháng/năm
+  const convertedDates = data?.schedules?.map((day: any) =>
+    convertDayToDateString(day)
+  );
   return (
     <Stack flex="100%" maxWidth="100%" padding="0 10px">
       <Box className="hospital__card" gap={gapCard}>
@@ -75,26 +94,38 @@ const DoctorCard = ({ data }: { data?: any }) => {
             Chuyên khoa: {data?.specialtyID?.name}
           </Typography>
           <Stack maxWidth="270px">
-            <SelectDate label="Chọn ngày:" value={date} setValue={setDate} />
+            <SelectDate
+              label="Chọn ngày:"
+              value={date}
+              setValue={setDate}
+              highlightedDays={convertedDates}
+            />
           </Stack>
-          {schedule?.timeType ? (
-            <Stack
-              flexDirection="row"
-              flexWrap={isTablet ? "wrap" : "nowrap"}
-              rowGap="24px"
-              gap="24px"
-              sx={{ overflow: "auto" }}
-            >
-              {schedule?.timeType?.map((data: any, index: any) => (
-                <Fragment key={index}>
-                  <PopupBooking schedule={schedule} time={data?.time} />
-                </Fragment>
-              ))}
-            </Stack>
+          {!loading ? (
+            schedule?.timeType ? (
+              <Stack
+                flexDirection="row"
+                flexWrap={isTablet ? "wrap" : "nowrap"}
+                rowGap="24px"
+                gap="24px"
+                sx={{ overflow: "auto" }}
+              >
+                {schedule?.timeType?.map((data: any, index: any) => (
+                  <Fragment key={index}>
+                    <PopupBooking schedule={schedule} time={data?.time} />
+                  </Fragment>
+                ))}
+              </Stack>
+            ) : (
+              <Typography variant="label1">
+                Bác sĩ hiện không có lịch khám
+              </Typography>
+            )
           ) : (
-            <Typography variant="label1">
-              Bác sĩ hiện không có lịch khám
-            </Typography>
+            <CustomSkeleton
+              customKey={`skeleton__card-schedule`}
+              variant="card-schedule"
+            />
           )}
 
           <Stack flexDirection="row" gap="16px">

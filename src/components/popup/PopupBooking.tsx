@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/base/TextareaAutosize";
 import { useEffect, useState } from "react";
-import { times } from "../../utils/constant";
+import { path, times } from "../../utils/constant";
 import { IoMdClose, IoMdCheckmark } from "react-icons/io";
 import { IoMaleFemale } from "react-icons/io5";
 import { GrDocumentUser } from "react-icons/gr";
@@ -35,25 +35,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import useNotification from "../../hooks/useNotification";
 import { addBooking, resetBookingStatus } from "../../redux/reducer/Booking";
+import { useNavigate } from "react-router-dom";
 
 const PopupBooking = ({ schedule, time }: { schedule?: any; time?: any }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { displayNotification } = useNotification();
   const { loading, successAction, errorAction } = useSelector(
     (state: any) => state.booking
   );
+  const { isLoggedIn } = useSelector((state: any) => state.auth);
 
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [payload, setPayload] = useState<any>({});
 
   const handleClickOpen = () => {
-    setOpen(true);
-    setPayload((prev: any) => ({
-      ...prev,
-      time: time,
-      scheduleID: schedule?._id,
-    }));
+    if (isLoggedIn) {
+      setOpen(true);
+      setPayload((prev: any) => ({
+        ...prev,
+        time: time,
+        scheduleID: schedule?._id,
+      }));
+    } else {
+      navigate(path.LOGIN);
+    }
   };
   const handleClose = () => {
     setOpen(false);

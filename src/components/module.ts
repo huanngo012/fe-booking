@@ -41,6 +41,7 @@ export interface CustomSkeletonProps {
     | "card-hospital-section"
     | "card-hospital"
     | "card-doctor"
+    | "card-schedule"
     | "card-patient"
     | "card-project"
     | "card-device-health"

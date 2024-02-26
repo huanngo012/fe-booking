@@ -15,6 +15,8 @@ const CustomSkeleton = ({ customKey, variant }: CustomSkeletonProps) => {
       return <CardHospitalSectionSkeleton customKey={customKey} />;
     case "card-doctor":
       return <CardDoctorSkeleton customKey={customKey} />;
+    case "card-schedule":
+      return <CardScheduleSkeleton customKey={customKey} />;
     case "card-patient":
       return <CardPatientSkeleton customKey={customKey} />;
     case "card-search":
@@ -131,17 +133,10 @@ const CardSearchSkeleton = ({ customKey }: SkeletonProps) => {
 };
 
 const CardDoctorSkeleton = ({ customKey }: SkeletonProps) => {
-  const isOversize = useMediaQuery(theme.breakpoints.up("oversize"));
   const isDesktop = useMediaQuery(theme.breakpoints.up("desktop"));
-  const widthCard = isOversize ? "50%" : "100%";
   const gapCard = isDesktop ? "40px" : "10px";
   return (
-    <Stack
-      key={customKey}
-      flex={widthCard}
-      maxWidth={widthCard}
-      padding="0 10px"
-    >
+    <Stack key={customKey} padding="0 10px" width="100%">
       <Stack flex="100%" maxWidth="100%" padding="0 10px">
         <Box className="hospital__card" gap={gapCard}>
           <Skeleton height={76} width={76} />
@@ -161,6 +156,28 @@ const CardDoctorSkeleton = ({ customKey }: SkeletonProps) => {
           </Stack>
         </Box>
       </Stack>
+    </Stack>
+  );
+};
+const CardScheduleSkeleton = ({ customKey }: SkeletonProps) => {
+  const isTablet = useMediaQuery(theme.breakpoints.up("tablet"));
+  return (
+    <Stack
+      key={customKey}
+      flexDirection="row"
+      flexWrap={isTablet ? "wrap" : "nowrap"}
+      rowGap="24px"
+      gap="24px"
+      sx={{ overflow: "auto" }}
+      width="100%"
+    >
+      <Skeleton height="80px" width="115px" />
+      <Skeleton height="80px" width="115px" />
+      <Skeleton height="80px" width="115px" />
+      <Skeleton height="80px" width="115px" />
+      <Skeleton height="80px" width="115px" />
+      <Skeleton height="80px" width="115px" />
+      <Skeleton height="80px" width="115px" />
     </Stack>
   );
 };
